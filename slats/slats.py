@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+"""Slats
+Main module
+"""
+
 import json
 from slatser import Slatser
 from utils import write_file_json
@@ -9,23 +13,24 @@ TMPDIR = '/tmp/channels'
 
 
 def make_stats(slack):
-    totalMessages = {}
+    """ Make statistics """
+    total_messages = {}
     for messages in slack.download_history(TMPDIR):
-        totalMessages[messages[0]] = messages[1]
-    totalEmojis = slack.count_all_emojis(TMPDIR)
+        total_messages[messages[0]] = messages[1]
+    total_emojis = slack.count_all_emojis(TMPDIR)
     return {
         'total': {
-            'messages': sum(totalMessages.values()),
-            'emojis': sum(totalEmojis.values())
+            'messages': sum(total_messages.values()),
+            'emojis': sum(total_emojis.values())
         },
-        'channel': totalMessages,
-        'emoji': totalEmojis,
+        'channel': total_messages,
+        'emoji': total_emojis,
         'urls': slack.emoji.list().body['emoji']
     }
 
 
-""" Main """
 def main(args):
+    """ Main """
     stats = make_stats(Slatser(args.token))
 
     if args.pretty:
