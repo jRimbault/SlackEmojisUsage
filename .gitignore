@@ -4,3 +4,4 @@
 /var/cache/
 !/var/cache/.gitkeep
 /config/*.json
+/Slats/
