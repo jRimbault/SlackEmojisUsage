@@ -1,0 +1,26 @@
+{
+    "name": "jrimbault/api.jrimbault.io",
+    "description": "private api",
+    "authors": [
+        {
+            "name": "jRimbault",
+            "email": "jacques.rimbault@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "jrimbault/conserto": "^0.4.0"
+    },
+    "repositories": {
+        "conserto": {
+            "type": "vcs",
+            "url": "https://git.jrimbault.io/jRimbault/Conserto.git"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Api\\": "src/"
+        }
+    },
+    "license": "MIT"
+}
