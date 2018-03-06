@@ -72,4 +72,3 @@ class Slatser(Slacker):
         for emoji in self.emojis_list():
             total[emoji] = grep(':'+emoji+':', path)
         return total
-
