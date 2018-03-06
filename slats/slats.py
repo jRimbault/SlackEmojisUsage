@@ -14,16 +14,19 @@ def make_stats(slack):
         totalMessages[messages[0]] = messages[1]
     totalEmojis = slack.count_all_emojis(TMPDIR)
     return {
-        'totals': {
+        'total': {
             'messages': sum(totalMessages.values()),
             'emojis': sum(totalEmojis.values())
         },
-        'channels': totalMessages,
-        'emojis': totalEmojis,
+        'channel': totalMessages,
+        'emoji': totalEmojis,
     }
 
 
 """ Main """
 def main(args):
-    slack = Slatser(args.token)
-    print(json.dumps(make_stats(slack), indent=2, sort_keys=True))
+    stats = make_stats(Slatser(args.token))
+    if args.pretty:
+        print(json.dumps(stats, indent=2, sort_keys=True))
+    else:
+        print(json.dumps(stats))

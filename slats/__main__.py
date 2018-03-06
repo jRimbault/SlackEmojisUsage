@@ -14,4 +14,9 @@ Count occurences of each custom emoji in Slack
     )
     parser.add_argument('-d', '--directory', help='Where to store the data')
     parser.add_argument('token', help='Slack API token')
+    parser.add_argument(
+        '-p', '--pretty',
+        help='Pretty print JSON output',
+        action='store_true'
+    )
     main(parser.parse_args())
