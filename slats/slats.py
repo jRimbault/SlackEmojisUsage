@@ -20,6 +20,7 @@ def make_stats(slack):
         },
         'channel': totalMessages,
         'emoji': totalEmojis,
+        'urls': slack.emoji.list().body['emoji']
     }
 
 
