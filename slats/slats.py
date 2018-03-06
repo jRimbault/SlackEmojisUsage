@@ -3,7 +3,7 @@
 
 import json
 from slatser import Slatser
-
+from utils import write_file_json
 
 TMPDIR = '/tmp/channels'
 
@@ -27,7 +27,12 @@ def make_stats(slack):
 """ Main """
 def main(args):
     stats = make_stats(Slatser(args.token))
+
     if args.pretty:
         print(json.dumps(stats, indent=2, sort_keys=True))
+        return
+
+    if args.output:
+        write_file_json(args.output, stats)
     else:
         print(json.dumps(stats))
