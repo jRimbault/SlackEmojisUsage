@@ -5,6 +5,7 @@ namespace Api\Controller;
 use Conserto\Json;
 use Conserto\Path;
 use Conserto\Controller;
+use Conserto\Utils\Config;
 use Conserto\Server\Http\Request;
 
 
@@ -14,9 +15,21 @@ class Slack extends Controller
 
     public function emojis(Request $request)
     {
+        $config = Config::Instance()->getArray();
         Json::writeToFile($_POST, new Path('/var/cache/postdump.json'));
 
-        return $this->getStats();
+        if ($request->post()->get('token') !== $config['verificationtoken'] &&
+            !isset($config['dev']))
+        {
+            return '401';
+        }
+        $request->post()->do('https://slack.com/api/chat.postMessage', [
+            'token' => $config['token'],
+            'channel' => $request->post()->get('channel_id'),
+            'text' => $this->getStats()
+        ]);
+
+        return '';
     }
 
     public function getStats()
