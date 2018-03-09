@@ -1,0 +1,22 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="card-columns">
+{% for emoji in emojis %}
+    <div class="card">
+        <img class="card-img-top" src="{{ emoji.url }}" alt="{{ emoji.name }}">
+        <div class="card-body">
+            <h5 class="card-title">{{ emoji.name }}</h5>
+            <p class="card-text">{{ emoji.count }}</p>
+            <p class="card-text">
+                <small class="text-muted"></small>
+            </p>
+        </div>
+    </div>
+{% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
