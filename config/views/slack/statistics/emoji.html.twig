@@ -3,22 +3,26 @@
 {% block title %}Emojis Stats{% endblock title %}
 
 {% block content %}
-<body class="bg-dark">
-<div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
-    <h5 class="text-white text-center">Last update: {{ date }}</h5>
-</div>
+<body class="bg-light">
 <div class="container" style="margin-top: 1rem; margin-bottom: 3rem;">
+    <div class="row">
+        <div class="col-12 text-center">
+            <p>Last update: <span id="update">{{ date }}</span></p>
+        </div>
+    </div>
 {% for quarto in emojis|batch(4) %}
     <div class="row card-deck">
     {% for emoji in quarto %}
     <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
-    <div class="card" style="margin: 1rem 0;">
-        <img class="card-img-top" src="{{ emoji.url }}" alt="{{ emoji.name }}">
-        <div class="card-body">
-            <h5 class="card-title">:{{ emoji.name }}:</h5>
+    <div class="card border-info bg-transparent" style="margin: 1rem 0;">
+        <div class="card-header bg-transparent border-info">
+            :<span class="emoji-name">{{ emoji.name }}</span>:
         </div>
-        <div class="card-footer">
-            <small class="text-muted">Nombre: {{ emoji.count }}</small>
+        <div class="card-body bg-transparent">
+            <img class="card-img emoji-img" src="{{ emoji.url }}" alt="{{ emoji.name }}">
+        </div>
+        <div class="card-footer bg-transparent border-info">
+            <small>Nombre: <span class="emoji-count">{{ emoji.count }}</span></small>
         </div>
     </div>
     </div>
