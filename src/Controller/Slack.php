@@ -19,15 +19,15 @@ class Slack extends Controller
         $config = Config::Instance()->getArray();
         $return = '401';
 
-        // if ($request->post()->get('token') === $config['verificationtoken']) {
-        //     Json::writeToFile($_POST, new Path('/var/cache/postdump.json'));
-        //     $request->post()->do('https://slack.com/api/chat.postMessage', [
-        //         'token' => $config['token'],
-        //         'channel' => $request->post()->get('channel_id'),
-        //         'text' => $this->slackMessage()
-        //     ]);
+        if ($request->post()->get('token') === $config['verificationtoken']) {
+            Json::writeToFile($_POST, new Path('/var/cache/postdump.json'));
+            $request->post()->do('https://slack.com/api/chat.postMessage', [
+                'token' => $config['token'],
+                'channel' => $request->post()->get('channel_id'),
+                'text' => $this->slackMessage()
+            ]);
             $return = '';
-        // }
+        }
 
         return $return;
     }
