@@ -48,6 +48,7 @@ class Slack extends Controller
 
         return $this->render('slack/statistics/emoji.html.twig', [
             'emojis' => $emojis,
+            'date' => date('H:i:s', filemtime(new Path($this->statsFile))),
         ]);
     }
 

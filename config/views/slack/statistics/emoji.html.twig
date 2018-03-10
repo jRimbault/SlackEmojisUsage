@@ -4,7 +4,10 @@
 
 {% block content %}
 <body class="bg-dark">
-<div class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
+<div class="container" style="margin-top: 1rem; margin-bottom: 1rem;">
+    <h5 class="text-white text-center">Last update: {{ date }}</h5>
+</div>
+<div class="container" style="margin-top: 1rem; margin-bottom: 3rem;">
 {% for quarto in emojis|batch(4) %}
     <div class="row card-deck">
     {% for emoji in quarto %}
