@@ -1,22 +1,25 @@
 {% extends "base.html.twig" %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="card-columns">
-{% for emoji in emojis %}
-    <div class="card">
+<body class="bg-dark">
+<div class="container" style="margin-top: 3rem; margin-bottom: 3rem;">
+{% for quarto in emojis|batch(4) %}
+    <div class="row card-deck">
+    {% for emoji in quarto %}
+    <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+    <div class="card" style="margin: 1rem 0;">
         <img class="card-img-top" src="{{ emoji.url }}" alt="{{ emoji.name }}">
         <div class="card-body">
-            <h5 class="card-title">{{ emoji.name }}</h5>
-            <p class="card-text">{{ emoji.count }}</p>
-            <p class="card-text">
-                <small class="text-muted"></small>
-            </p>
+            <h5 class="card-title">:{{ emoji.name }}:</h5>
         </div>
+        <div class="card-footer">
+            <small class="text-muted">Nombre: {{ emoji.count }}</small>
+        </div>
+    </div>
+    </div>
+    {% endfor %}
     </div>
 {% endfor %}
-        </div>
-    </div>
 </div>
+</body>
 {% endblock content %}
