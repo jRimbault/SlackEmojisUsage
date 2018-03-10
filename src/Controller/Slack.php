@@ -69,7 +69,7 @@ class Slack extends Controller
         foreach ($mostUsed as $name => $value) {
             $text[] = ":$name: $value";
         }
-
+        $text[] = 'https://' .  $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         return join(PHP_EOL, $text);
     }
 }
