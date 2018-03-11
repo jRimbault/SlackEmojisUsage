@@ -35,12 +35,8 @@ class Slack extends Controller
     public function emojishtml(Request $request)
     {
         $data = Json::DecodeFile(new Path($this->statsFile));
-        uasort($data, function (array $a, array $b) {
-            return ($a[1] <=> $b[1]);
-        });
-        $data = array_reverse(array_filter($data, function($value) {
-            return (bool) $value[1];
-        }));
+        $data = $this->sortStructure($data);
+
         return $this->render('slack/statistics/emoji.html.twig', [
             'emojis' => $data,
             'date' => filemtime(new Path($this->statsFile)),
@@ -50,10 +46,10 @@ class Slack extends Controller
 
     private function getNfirst($n = 10)
     {
-        $emojis = Json::DecodeFile(new Path($this->statsFile))['emoji'];
-        arsort($emojis);
+        $data = Json::DecodeFile(new Path($this->statsFile));
+        $data = $this->sortStructure($data);
 
-        return array_slice($emojis, 0, $n, true);
+        return array_slice($data, 0, $n);
     }
 
     /** contruct a slack message */
@@ -61,10 +57,22 @@ class Slack extends Controller
     {
         $mostUsed = $this->getNfirst();
         $text = [];
-        foreach ($mostUsed as $name => $value) {
-            $text[] = ":$name: $value";
+        foreach ($mostUsed as $emoji) {
+            $text[] = ":$emoji[0]: $emoji[1]";
         }
         $text[] = 'https://' .  $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
         return join(PHP_EOL, $text);
+    }
+
+    private function sortStructure(array $data)
+    {
+        uasort($data, function (array $a, array $b) {
+            return ($a[1] <=> $b[1]);
+        });
+
+        return array_reverse(array_filter($data, function($value) {
+            return (bool) $value[1];
+        }));
     }
 }
