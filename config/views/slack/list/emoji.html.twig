@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Emojis Stats{% endblock title %}
+{% block title %}Emojis List{% endblock title %}
 
 {% block content %}
 <body class="bg-light">
@@ -23,6 +23,9 @@
     </div>
 </div>
 </body>
+{% endblock content %}
+
+{% block scripts %}
 <script>
     const links = document.querySelectorAll('a.list-group-item')
 
@@ -39,4 +42,4 @@
         })
     })
 </script>
-{% endblock content %}
+{% endblock scripts %}
