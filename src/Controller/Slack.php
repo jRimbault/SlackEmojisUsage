@@ -67,12 +67,8 @@ class Slack extends Controller
 
     private function sortStructure(array $data)
     {
-        uasort($data, function (array $a, array $b) {
-            return ($a[1] <=> $b[1]);
-        });
-
         return array_reverse(array_filter($data, function($value) {
-            return (bool) $value[1];
+            return (bool) $value[0];
         }));
     }
 }
