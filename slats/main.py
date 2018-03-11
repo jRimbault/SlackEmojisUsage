@@ -14,30 +14,21 @@ TMPDIR = '/tmp/channels'
 
 def make_stats(slack):
     """ Make statistics """
-    total_messages = {}
-    for messages in slack.download_history(TMPDIR):
-        total_messages[messages[0]] = messages[1]
-    total_emojis = slack.count_all_emojis(TMPDIR)
-    return {
-        'total': {
-            'messages': sum(total_messages.values()),
-            'emojis': sum(total_emojis.values())
-        },
-        'channel': total_messages,
-        'emoji': total_emojis,
-        'urls': slack.emoji.list().body['emoji']
-    }
+    emojis = slack.count_all_emojis(TMPDIR)
+    urls = slack.emoji.list().body['emoji']
+
+    data = []
+    for name, count in zip(emojis.keys(), emojis.values()):
+        data.append([name, count, urls[name]])
+    return data
 
 
 def main(args):
     """ Main """
-    stats = make_stats(Slatser(args.token))
+    slack = Slatser(args.token)
+    data = make_stats(slack)
 
     if args.pretty:
-        print(json.dumps(stats, indent=2, sort_keys=True))
-        return
-
+        print(json.dumps(data, indent=2))
     if args.output:
-        write_file_json(args.output, stats)
-    else:
-        print(json.dumps(stats))
+        write_file_json(args.output, data)
