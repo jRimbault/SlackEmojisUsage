@@ -34,20 +34,15 @@ class Slack extends Controller
 
     public function emojishtml(Request $request)
     {
-        $stats = Json::DecodeFile(new Path($this->statsFile));
-        arsort($stats['emoji']);
-        $stats['emoji'] = array_filter($stats['emoji']);
-        $emojis = [];
-        foreach ($stats['emoji'] as $name => $count) {
-            $emojis[] = [
-                'name' => $name,
-                'count' => $count,
-                'url' => $stats['urls'][$name],
-            ];
-        }
-
+        $data = Json::DecodeFile(new Path($this->statsFile));
+        uasort($data, function (array $a, array $b) {
+            return ($a[1] <=> $b[1]);
+        });
+        $data = array_reverse(array_filter($data, function($value) {
+            return (bool) $value[1];
+        }));
         return $this->render('slack/statistics/emoji.html.twig', [
-            'emojis' => $emojis,
+            'emojis' => $data,
             'date' => filemtime(new Path($this->statsFile)),
         ]);
     }
