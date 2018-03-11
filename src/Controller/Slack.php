@@ -43,6 +43,16 @@ class Slack extends Controller
         ]);
     }
 
+    public function emojislist(Request $request)
+    {
+        $data = Json::DecodeFile(new Path($this->statsFile));
+        // $data = $this->sortStructure($data);
+
+        return $this->render('slack/list/emoji.html.twig', [
+            'emojis' => array_reverse($data),
+            'date' => filemtime(new Path($this->statsFile)),
+        ]);
+    }
 
     private function getNfirst($n = 10)
     {
