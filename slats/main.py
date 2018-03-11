@@ -19,8 +19,8 @@ def make_stats(slack):
 
     data = []
     for name, count in zip(emojis.keys(), emojis.values()):
-        data.append([name, count, urls[name]])
-    return data
+        data.append([count, name, urls[name]])
+    return sorted(data)
 
 
 def main(args):
