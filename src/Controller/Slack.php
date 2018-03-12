@@ -46,9 +46,9 @@ class Slack extends Controller
     public function emojislist(Request $request)
     {
         return $this->render('slack/list/emoji.html.twig', [
-            'emojis' => array_reverse(
+            'emojis' => array_reverse($this->removeAliases(
                 Json::DecodeFile(new Path($this->statsFile))
-            ),
+            )),
             'date' => filemtime(new Path($this->statsFile)),
         ]);
     }
@@ -76,8 +76,20 @@ class Slack extends Controller
 
     private function sortStructure(array $data)
     {
-        return array_reverse(array_filter($data, function($value) {
+        return array_reverse($this->removeAliases($this->removeNullValues($data)));
+    }
+
+    private function removeNullValues(array $data)
+    {
+        return array_filter($data, function($value) {
             return (bool) $value[0];
-        }));
+        });
+    }
+
+    private function removeAliases(array $data)
+    {
+        return array_filter($data, function($value) {
+            return !(false !== strpos($value[2], 'alias:'));
+        });
     }
 }
