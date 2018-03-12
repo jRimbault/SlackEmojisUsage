@@ -2,9 +2,21 @@
 
 {% block title %}Emojis Stats{% endblock title %}
 
+{% block stylesheets %}
+<style>
+div.container {
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
+div.card {
+    margin: 1rem 0;
+}
+</style>
+{% endblock stylesheets %}
+
 {% block content %}
 <body class="bg-light">
-<div class="container" style="margin-top: 1rem; margin-bottom: 3rem;">
+<div class="container">
     <div class="row">
         <div class="col-12 text-center">
             <p>Last update: <span id="update">{{ date|date('H:i') }}</span></p>
@@ -14,7 +26,7 @@
     <div class="row card-deck">
     {% for emoji in quarto %}
     <div class="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
-    <div class="card border-info bg-transparent" style="margin: 1rem 0;">
+    <div class="card border-info bg-transparent">
         <div class="card-header bg-transparent border-info">
             :<span class="emoji-name">{{ emoji.1 }}</span>:
         </div>
@@ -32,3 +44,6 @@
 </div>
 </body>
 {% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}
