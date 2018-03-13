@@ -20,8 +20,11 @@ def make_stats(slack):
 
     data = []
     for name, count in zip(emojis.keys(), emojis.values()):
-        data.append([count, name, urls[name]])
-    return sorted(data)
+        url = urls[name]
+        if 'alias' in url:
+            url = ''
+        data.append([count, name, url])
+    return sorted(data, reverse=True)
 
 
 def main(args):

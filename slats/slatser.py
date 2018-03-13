@@ -25,7 +25,7 @@ class Slatser(Slacker):
         """ Get all the public channels from Slack """
         channels = self.channels.list(exclude_archived=True).body['channels']
         for channel in channels:
-            yield {'id': channel['id'], 'name': channel['name']}
+            yield channel['id']
 
 
     def channel_full_history(self, channel, pagesize=100):
@@ -57,13 +57,12 @@ class Slatser(Slacker):
         yield their names and messages count
         """
         mkdir(path)
-        for channel in self.channels_list():
-            messages = self.channel_full_history(channel['id'])
+        for channel_id in self.channels_list():
+            messages = self.channel_full_history(channel_id)
             write_file_json(
-                path + '/' + channel['name'] + '.json',
+                path + '/' + channel_id + '.json',
                 messages
             )
-            # yield (channel['name'], len(messages))
 
 
     def count_all_emojis(self, path):
