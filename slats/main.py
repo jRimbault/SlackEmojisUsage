@@ -14,6 +14,7 @@ TMPDIR = '/tmp/channels'
 
 def make_stats(slack):
     """ Make statistics """
+    slack.download_history(TMPDIR)
     emojis = slack.count_all_emojis(TMPDIR)
     urls = slack.emoji.list().body['emoji']
 

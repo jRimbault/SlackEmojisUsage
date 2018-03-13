@@ -63,7 +63,7 @@ class Slatser(Slacker):
                 path + '/' + channel['name'] + '.json',
                 messages
             )
-            yield (channel['name'], len(messages))
+            # yield (channel['name'], len(messages))
 
 
     def count_all_emojis(self, path):
