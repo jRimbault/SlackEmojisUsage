@@ -36,9 +36,7 @@ class Slack extends Controller
     public function emojishtml(Request $request)
     {
         return $this->render('slack/statistics/emoji.html.twig', [
-            'emojis' => $this->sortStructure(
-                Json::DecodeFile(new Path($this->statsFile))
-            ),
+            'emojis' => Json::DecodeFile(new Path($this->statsFile)),
             'date' => filemtime(new Path($this->statsFile)),
         ]);
     }
@@ -46,50 +44,24 @@ class Slack extends Controller
     public function emojislist(Request $request)
     {
         return $this->render('slack/list/emoji.html.twig', [
-            'emojis' => array_reverse($this->removeAliases(
-                Json::DecodeFile(new Path($this->statsFile))
-            )),
+            'emojis' => Json::DecodeFile(new Path($this->statsFile)),
             'date' => filemtime(new Path($this->statsFile)),
         ]);
     }
 
-    private function getNfirst(int $n = 10)
-    {
-        return array_slice(
-            $this->sortStructure(Json::DecodeFile(new Path($this->statsFile))),
-            0, $n
-        );
-    }
-
     /** contruct a slack message */
-    private function slackMessage()
+    private function slackMessage(int $n = 10): string
     {
         return join(PHP_EOL, array_reduce(
-            $this->getNfirst(),
+            array_slice(
+                Json::DecodeFile(new Path($this->statsFile)),
+                0, $n
+            ),
             function($text, $emoji) {
                 array_push($text, ":$emoji[1]: $emoji[0]");
                 return $text;
             },
             []
         ));
-    }
-
-    private function sortStructure(array $data)
-    {
-        return array_reverse($this->removeAliases($this->removeNullValues($data)));
-    }
-
-    private function removeNullValues(array $data)
-    {
-        return array_filter($data, function($value) {
-            return (bool) $value[0];
-        });
-    }
-
-    private function removeAliases(array $data)
-    {
-        return array_filter($data, function($value) {
-            return !(false !== strpos($value[2], 'alias:'));
-        });
     }
 }
