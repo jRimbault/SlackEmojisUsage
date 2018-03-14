@@ -37,5 +37,6 @@ class Kernel
         $this->router->post('/slack/statistics/emoji', Slack::class, 'emojis');
         $this->router->get('/slack/statistics/emoji', Slack::class, 'emojishtml');
         $this->router->get('/slack/list/emoji', Slack::class, 'emojislist');
+        $this->router->post('/slack/list/emoji', Slack::class, 'emojisjson');
     }
 }

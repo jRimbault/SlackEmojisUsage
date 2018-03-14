@@ -49,6 +49,12 @@ class Slack extends Controller
         ]);
     }
 
+    public function emojisjson()
+    {
+        header('Content-Type: application/json');
+        return file_get_contents(new Path('/Slats/stats.json'));
+    }
+
     /** contruct a slack message */
     private function slackMessage(int $n = 10): string
     {
