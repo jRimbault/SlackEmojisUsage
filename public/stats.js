@@ -43,7 +43,7 @@ const chartOptions = {
     },
     options: {
         legend: {
-            // display: false
+            display: false
         },
         tooltips: {
             displayColors: false

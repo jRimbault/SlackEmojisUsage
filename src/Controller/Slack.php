@@ -35,9 +35,13 @@ class Slack extends Controller
 
     public function emojishtml(Request $request)
     {
+        $emojis = Json::DecodeFile(new Path($this->statsFile));
         return $this->render('slack/statistics/emoji.html.twig', [
-            'emojis' => Json::DecodeFile(new Path($this->statsFile)),
+            'emojis' => $emojis,
             'date' => filemtime(new Path($this->statsFile)),
+            'total' => array_reduce($emojis, function($total, $emoji) {
+                return $total += $emoji[0];
+            }, 0)
         ]);
     }
 
