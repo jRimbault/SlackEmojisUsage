@@ -14,7 +14,7 @@ class Slack extends Controller
     private $statsFile = '/Slats/stats.json';
 
     /** post route */
-    public function emojis(Request $request)
+    public function emojisSlackMessage(Request $request)
     {
         $config = Config::Instance()->getArray();
 
@@ -33,7 +33,7 @@ class Slack extends Controller
         return '';
     }
 
-    public function emojishtml(Request $request)
+    public function emojisHtml(Request $request)
     {
         $emojis = Json::DecodeFile(new Path($this->statsFile));
         return $this->render('slack/statistics/emoji.html.twig', [
@@ -45,15 +45,7 @@ class Slack extends Controller
         ]);
     }
 
-    public function emojislist(Request $request)
-    {
-        return $this->render('slack/list/emoji.html.twig', [
-            'emojis' => Json::DecodeFile(new Path($this->statsFile)),
-            'date' => filemtime(new Path($this->statsFile)),
-        ]);
-    }
-
-    public function emojisjson()
+    public function emojisList()
     {
         header('Content-Type: application/json');
         return file_get_contents(new Path('/Slats/stats.json'));

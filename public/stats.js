@@ -57,7 +57,20 @@ const chartOptions = {
         datasets: [{
             label: '# of Uses',
             data: [],
-            backgroundColor: [],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
             borderWidth: 1
         }]
     },
@@ -69,15 +82,15 @@ const chartOptions = {
             displayColors: false
         },
         title: {
-            text: 'Top 20 Custom Emojis',
+            text: 'Top 5 Custom Emojis',
             display: true
         },
     }
 }
 
+// https://github.com/chartjs/Chart.js/issues/815
 request.post('/slack/list/emoji', [], xhr => {
-    let emojis = JSON.parse(xhr.responseText).slice(0, 20)
-    emojis = shuffle(emojis)
+    let emojis = JSON.parse(xhr.responseText).slice(0, 5)
     let labels = emojis.reduce((labels, value) => {
         labels.push(value[1])
         return labels
@@ -88,13 +101,12 @@ request.post('/slack/list/emoji', [], xhr => {
         return data
     }, [])
 
-    let backgroundColor = palette('tol-dv', data.length).map(hex => {
+    let backgroundColor = palette('tol-rainbow', data.length).map(hex => {
         return '#' + hex
     })
 
     chartOptions.data.labels = labels
     chartOptions.data.datasets[0].data = data
-    chartOptions.data.datasets[0].backgroundColor = shuffle(backgroundColor)
 
     console.log(chartOptions)
 
