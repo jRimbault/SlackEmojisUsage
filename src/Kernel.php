@@ -13,14 +13,8 @@ class Kernel
 {
     private $router;
 
-    private function setConfiguration()
-    {
-        Config::setConfigFile(new Path('/config/app.json'));
-    }
-
     public function __construct()
     {
-        $this->setConfiguration();
         $this->router = new Router();
         $this->slackRoutes();
     }
