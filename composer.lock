@@ -4,18 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "702dc73833d3a5443a713fd01aa938ab",
-    "content-hash": "615910158a3363941154677fdf292fb5",
+    "hash": "9e927744e255cebec81410739c1a35b2",
+    "content-hash": "940821651f05fbff0d0555d4f6b790eb",
     "packages": [
         {
             "name": "jrimbault/conserto",
-            "version": "v0.4.4",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://git.jrimbault.io/jRimbault/Conserto.git",
-                "reference": "7488f39fb8fcf526850487fba0eebdc9dd9204af"
+                "reference": "c70d8c0a5c7bbf5466f2db1c63050d394921bd44"
             },
             "require": {
+                "ext-curl": "*",
                 "php": "^7.0",
                 "twig/twig": "^2.0"
             },
@@ -40,7 +41,7 @@
                 }
             ],
             "description": "Router, Controller and helper classes",
-            "time": "2018-03-10 14:07:08"
+            "time": "2018-03-31 10:20:36"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -103,16 +104,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.4.6",
+            "version": "v2.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "d2117ec118c1ff3d28ccddca8212d82787a4809f"
+                "reference": "69aacd44dbbaa3199d5afb68605c996d577896fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/d2117ec118c1ff3d28ccddca8212d82787a4809f",
-                "reference": "d2117ec118c1ff3d28ccddca8212d82787a4809f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/69aacd44dbbaa3199d5afb68605c996d577896fc",
+                "reference": "69aacd44dbbaa3199d5afb68605c996d577896fc",
                 "shasum": ""
             },
             "require": {
@@ -121,8 +122,8 @@
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~3.3@dev"
+                "symfony/debug": "^2.7",
+                "symfony/phpunit-bridge": "^3.3"
             },
             "type": "library",
             "extra": {
@@ -165,7 +166,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-03-03 16:23:01"
+            "time": "2018-03-20 04:31:17"
         }
     ],
     "packages-dev": [],

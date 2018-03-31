@@ -16,8 +16,6 @@ class Kernel
     private function setConfiguration()
     {
         Config::setConfigFile(new Path('/config/app.json'));
-        Controller::setCache(new Path('/var/cache'));
-        Controller::setTemplate(new Path('/config/views'));
     }
 
     public function __construct()

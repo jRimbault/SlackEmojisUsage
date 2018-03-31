@@ -34,7 +34,7 @@ class Slack extends Controller
             return '401';
         }
 
-        Json::writeToFile($_POST, new Path('/var/cache/postdump.json'));
+        Json::encodeToFile($_POST, new Path('/var/cache/postdump.json'));
         $request->post()->do('https://slack.com/api/chat.postMessage', [
             'token' => $config['token'],
             'channel' => $request->post()->get('channel_id'),
@@ -88,7 +88,7 @@ class Slack extends Controller
     {
         return join(PHP_EOL, array_reduce(
             array_slice(
-                Json::DecodeFile(new Path($this->statsFile)),
+                Json::decodeFile(new Path($this->statsFile)),
                 0, $n
             ),
             function($text, $emoji) {
