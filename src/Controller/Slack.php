@@ -12,9 +12,15 @@ use Conserto\Server\Http\Request;
 class Slack extends Controller
 {
     /**
-     * @var string path to the json file containing the last counts
+     * Get the path to the file containing the latest data
+     *
+     * @return string
      */
-    private $statsFile = '/Slats/stats.json';
+    private function statsFile(): string
+    {
+        return Config::Instance()->getstatsfile() ??
+               '/Slats/stats.json';
+    }
 
     /**
      * @Route("/slack/statistics/emoji", methods="POST")
@@ -54,10 +60,10 @@ class Slack extends Controller
      */
     public function emojisHtml(Request $request)
     {
-        $emojis = Json::DecodeFile(new Path($this->statsFile));
+        $emojis = Json::DecodeFile(new Path($this->statsFile()));
         return $this->render('slack/statistics/emoji.html.twig', [
             'emojis' => $emojis,
-            'date' => filemtime(new Path($this->statsFile)),
+            'date' => filemtime(new Path($this->statsFile())),
             'total' => array_reduce($emojis, function($total, $emoji) {
                 return $total += $emoji[0];
             }, 0)
@@ -88,7 +94,7 @@ class Slack extends Controller
     {
         return join(PHP_EOL, array_reduce(
             array_slice(
-                Json::decodeFile(new Path($this->statsFile)),
+                Json::decodeFile(new Path($this->statsFile())),
                 0, $n
             ),
             function($text, $emoji) {
