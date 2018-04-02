@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9e927744e255cebec81410739c1a35b2",
-    "content-hash": "940821651f05fbff0d0555d4f6b790eb",
+    "hash": "b7b3e81641fdbff4c1d12aa8d7e5b062",
+    "content-hash": "5cc6c262e4deebd8717deb8b6b1e12b3",
     "packages": [
         {
             "name": "jrimbault/conserto",
             "version": "v0.5.2",
             "source": {
                 "type": "git",
-                "url": "https://git.jrimbault.io/jRimbault/Conserto.git",
+                "url": "https://bitbucket.org/jRimbault/conserto.git",
                 "reference": "8d2bab991672fb1e32ba5a5e8161e71eb629b1f6"
             },
             "require": {
@@ -104,16 +104,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.4.7",
+            "version": "v2.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "69aacd44dbbaa3199d5afb68605c996d577896fc"
+                "reference": "7b604c89da162034bdf4bb66310f358d313dd16d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/69aacd44dbbaa3199d5afb68605c996d577896fc",
-                "reference": "69aacd44dbbaa3199d5afb68605c996d577896fc",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7b604c89da162034bdf4bb66310f358d313dd16d",
+                "reference": "7b604c89da162034bdf4bb66310f358d313dd16d",
                 "shasum": ""
             },
             "require": {
@@ -166,7 +166,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2018-03-20 04:31:17"
+            "time": "2018-04-02 09:24:19"
         }
     ],
     "packages-dev": [],
