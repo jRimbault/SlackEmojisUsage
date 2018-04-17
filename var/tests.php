@@ -9,7 +9,7 @@ use Api\Model\Emoji;
 
 $emojis = Emoji::getAll();
 
-foreach($emojis as $emoji) {
+foreach ($emojis as $emoji) {
     var_dump($emoji);
 }
 
