@@ -1,6 +1,8 @@
 /vendor/
-/var/log/
-!/var/log/.gitkeep
+/var/logs/
+!/var/logs/.gitkeep
 /var/cache/
 !/var/cache/.gitkeep
+/var/resources/
+!/var/resources/.gitkeep
 /config/*.json
