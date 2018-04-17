@@ -19,8 +19,8 @@ Json data structure:
 ```json
 [
     [
-        "emoji name",
         <number of occurences>,
+        "emoji name",
         "emoji url"
     ],
     [...],
@@ -29,8 +29,8 @@ Json data structure:
 ]
 ```
 Array of arrays containing each 3 values:
-- the custom emoji's name
-- its number of occurences in the last 10000 messages
+- the custom emoji's number of occurences
+- its name
 - its URL
 
 ### Todo:
@@ -41,8 +41,8 @@ Database example:
 ```sql
 create table emoji (
     id    integer primary key autoincrement,
-    name  varchar (64) unique not null,
-    url   varchar (512) not null
+    name  text unique not null,
+    url   text not null
 );
 create table count (
     id    integer not null,
