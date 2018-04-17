@@ -10,7 +10,7 @@ class Database extends \PDO
     private static $instance;
     private static $dbfile = '/var/resources/emoji.db';
 
-    private function __construct()
+    public function __construct()
     {
         parent::__construct('sqlite:' . new Path(self::$dbfile));
     }

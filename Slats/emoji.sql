@@ -15,7 +15,7 @@ CREATE TABLE count (
 
 -- test data
 
-INSERT INTO emoji (name, url) VALUES
+INSERT OR IGNORE INTO emoji (name, url) VALUES
     ('sad', 'http://sad.com'),
     ('happy', 'http://happy.com'),
     ('renifle', 'http://renifle.com'),
@@ -55,6 +55,11 @@ INSERT INTO count (id, count) VALUES
 
 -- test selection
 
+SELECT e.name, e.url, group_concat(c.count)
+FROM emoji AS e, count AS c
+WHERE e.id = c.id
+GROUP BY e.name;
+
 SELECT
     name,
     url, (
@@ -88,9 +93,3 @@ FROM emoji AS e, (
     ORDER BY date ASC
 )
 WHERE e.name = 'sad';
-
-
--- INSERT
-
-INSERT OR IGNORE INTO emoji (name, url) VALUES
-    ('saddest', 'http://sad.com');

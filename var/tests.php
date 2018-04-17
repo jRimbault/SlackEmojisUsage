@@ -7,9 +7,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Api\Model\Emoji;
 
 
-$emojis = Emoji::getAll();
-
-foreach ($emojis as $emoji) {
-    var_dump($emoji);
-}
-
+echo json_encode(
+    Emoji::simpleAllEmojis(),
+    JSON_UNESCAPED_UNICODE |
+    JSON_UNESCAPED_SLASHES |
+    JSON_PRETTY_PRINT
+);
