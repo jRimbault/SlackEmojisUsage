@@ -97,4 +97,4 @@ def testing():
     # dbh.new_count('token', 20)
     print([r for r in dbh.emojis()])
 
-testing()
+#testing()
