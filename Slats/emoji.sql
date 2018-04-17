@@ -52,3 +52,23 @@ insert into count (id, count) values
     ((select id from emoji where name = 'happy'), 30),
     ((select id from emoji where name = 'renifle'), 17),
     ((select id from emoji where name = 'apart'), 19);
+
+-- test selection
+
+SELECT
+    name,
+    url, (
+        SELECT group_concat(count)
+        FROM (
+            SELECT count
+            FROM count
+            WHERE id = (
+                SELECT id
+                FROM emoji
+                WHERE name = 'sad'
+            )
+            ORDER BY date ASC
+        )
+    ) AS count
+FROM emoji
+WHERE name = 'sad';
