@@ -92,16 +92,19 @@ class Slack extends Controller
      */
     private function slackMessage(int $n = 10): string
     {
-        return join(PHP_EOL, array_reduce(
-            array_slice(
-                Json::decodeFile(new Path($this->statsFile())),
-                0, $n
-            ),
-            function($text, $emoji) {
-                array_push($text, ":$emoji[1]: $emoji[0]");
-                return $text;
-            },
-            []
-        ));
+        return join(PHP_EOL,
+            array_reduce(
+                array_slice(
+                    Json::decodeFile(new Path($this->statsFile())),
+                    0,
+                    $n
+                ),
+                function($text, $emoji) {
+                    array_push($text, ":$emoji[1]: $emoji[0]");
+                    return $text;
+                },
+                []
+            )
+        );
     }
 }
