@@ -1,4 +1,5 @@
 /.vscode/
+/html/
 /vendor/
 /var/logs/
 !/var/logs/.gitkeep

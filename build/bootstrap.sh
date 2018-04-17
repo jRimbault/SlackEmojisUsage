@@ -39,7 +39,7 @@ dependencies_setup()
 # and restart apache2 server
 apache_setup()
 {
-  cp /var/www/build/virtualhost.conf /etc/apache2/sites-available/000-default.conf
+  ln -s /var/www/build/virtualhost.conf /etc/apache2/sites-available/000-default.conf
   a2enmod rewrite
 }
 
