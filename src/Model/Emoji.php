@@ -20,6 +20,21 @@ class Emoji
         $this->count = $count;
     }
 
+    public static function find($name)
+    {
+        $db = Database::Instance();
+        $statement = $db->prepare(self::getSingleEmoji());
+        $result = $db->executeFetchAll($statement, [$name, $name])[0];
+        if (!result) {
+            return null;
+        }
+        return new Emoji(
+            $result['name'],
+            $result['url'],
+            array_map('intval', explode(',', $result['count']))
+        );
+    }
+
     public static function getAll()
     {
         $db = Database::Instance();
