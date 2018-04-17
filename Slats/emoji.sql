@@ -1,12 +1,12 @@
 -- tables
 
-create table emoji (
+CREATE TABLE emoji (
     id    integer primary key autoincrement,
     name  varchar (64) unique not null,
     url   varchar (512) not null
 );
 
-create table count (
+CREATE TABLE count (
     id    integer not null,
     count integer not null,
     date  datetime default current_timestamp,
@@ -15,7 +15,7 @@ create table count (
 
 -- test data
 
-insert into emoji (name, url) values
+INSERT INTO emoji (name, url) VALUES
     ('sad', 'http://sad.com'),
     ('happy', 'http://happy.com'),
     ('renifle', 'http://renifle.com'),
@@ -23,35 +23,35 @@ insert into emoji (name, url) values
 
 -- pause between inserts
 
-insert into count (id, count) values
-    ((select id from emoji where name = 'sad'), 15),
-    ((select id from emoji where name = 'happy'), 17),
-    ((select id from emoji where name = 'renifle'), 24),
-    ((select id from emoji where name = 'apart'), 13);
+INSERT INTO count (id, count) VALUES
+    ((SELECT id FROM emoji WHERE name = 'sad'), 15),
+    ((SELECT id FROM emoji WHERE name = 'happy'), 17),
+    ((SELECT id FROM emoji WHERE name = 'renifle'), 24),
+    ((SELECT id FROM emoji WHERE name = 'apart'), 13);
 
 -- pause between inserts
 
-insert into count (id, count) values
-    ((select id from emoji where name = 'sad'), 13),
-    ((select id from emoji where name = 'happy'), 25),
-    ((select id from emoji where name = 'renifle'), 19),
-    ((select id from emoji where name = 'apart'), 22);
+INSERT INTO count (id, count) VALUES
+    ((SELECT id FROM emoji WHERE name = 'sad'), 13),
+    ((SELECT id FROM emoji WHERE name = 'happy'), 25),
+    ((SELECT id FROM emoji WHERE name = 'renifle'), 19),
+    ((SELECT id FROM emoji WHERE name = 'apart'), 22);
 
 -- pause between inserts
 
-insert into count (id, count) values
-    ((select id from emoji where name = 'sad'), 14),
-    ((select id from emoji where name = 'happy'), 18),
-    ((select id from emoji where name = 'renifle'), 22),
-    ((select id from emoji where name = 'apart'), 16);
+INSERT INTO count (id, count) VALUES
+    ((SELECT id FROM emoji WHERE name = 'sad'), 14),
+    ((SELECT id FROM emoji WHERE name = 'happy'), 18),
+    ((SELECT id FROM emoji WHERE name = 'renifle'), 22),
+    ((SELECT id FROM emoji WHERE name = 'apart'), 16);
 
 -- pause between inserts
 
-insert into count (id, count) values
-    ((select id from emoji where name = 'sad'), 8),
-    ((select id from emoji where name = 'happy'), 30),
-    ((select id from emoji where name = 'renifle'), 17),
-    ((select id from emoji where name = 'apart'), 19);
+INSERT INTO count (id, count) VALUES
+    ((SELECT id FROM emoji WHERE name = 'sad'), 8),
+    ((SELECT id FROM emoji WHERE name = 'happy'), 30),
+    ((SELECT id FROM emoji WHERE name = 'renifle'), 17),
+    ((SELECT id FROM emoji WHERE name = 'apart'), 19);
 
 -- test selection
 
@@ -74,9 +74,9 @@ FROM emoji
 WHERE name = 'sad';
 
 SELECT
-    e.name as name,
-    e.url as url,
-    group_concat(count) as count
+    e.name AS name,
+    e.url AS url,
+    group_concat(count) AS count
 FROM emoji AS e, (
     SELECT count
     FROM count
@@ -90,7 +90,7 @@ FROM emoji AS e, (
 WHERE e.name = 'sad';
 
 
--- insert
+-- INSERT
 
 INSERT OR IGNORE INTO emoji (name, url) VALUES
     ('saddest', 'http://sad.com');
