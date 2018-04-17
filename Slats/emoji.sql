@@ -88,3 +88,9 @@ FROM emoji AS e, (
     ORDER BY date ASC
 )
 WHERE e.name = 'sad';
+
+
+-- insert
+
+INSERT OR IGNORE INTO emoji (name, url) VALUES
+    ('saddest', 'http://sad.com');
