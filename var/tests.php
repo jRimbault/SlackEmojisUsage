@@ -7,6 +7,9 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Api\Model\Emoji;
 
 
-$emojis = Emoji::InitAll();
+$emojis = Emoji::getAll();
 
-var_dump($emojis);
+foreach($emojis as $emoji) {
+    var_dump($emoji);
+}
+

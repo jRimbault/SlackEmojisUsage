@@ -20,20 +20,18 @@ class Emoji
         $this->count = $count;
     }
 
-    public static function InitAll()
+    public static function getAll()
     {
         $db = Database::Instance();
-        $emojis = [];
         $statement = $db->prepare(self::getSingleEmoji());
         foreach (self::getAllEmojisNames() as $name) {
             $result = $db->executeFetchAll($statement, [$name, $name])[0];
-            $emojis[] = new Emoji(
+            yield new Emoji(
                 $result['name'],
                 $result['url'],
                 array_map('intval', explode(',', $result['count']))
             );
         }
-        return $emojis;
     }
 
     private static function getSingleEmoji(): string
