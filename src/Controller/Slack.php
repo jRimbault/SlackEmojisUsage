@@ -4,6 +4,7 @@ namespace Api\Controller;
 
 use Conserto\Json;
 use Conserto\Path;
+use Api\Model\Emoji;
 use Conserto\Controller;
 use Conserto\Utils\Config;
 use Conserto\Server\Http\Request;
@@ -81,6 +82,18 @@ class Slack extends Controller
     {
         header('Content-Type: application/json');
         return file_get_contents(new Path('/Slats/stats.json'));
+    }
+
+    /**
+     * @Route("/slack/data/emoji", methods="POST")
+     *
+     * Returns the JSON data about all emojis
+     *
+     * @return string
+     */
+    public function emojisData()
+    {
+        return $this->json(Emoji::simpleAllEmojis());
     }
 
     /**
