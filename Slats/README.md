@@ -50,8 +50,8 @@ create table count (
     foreign key (id) references emoji(id)
 );
 
-select name, url from emoji;
-
+-- sqlite3 doesn't allow ordering the group_concat
+-- this would return the desired result only coincidentally
 select e.name, e.url, group_concat(c.count)
 from emoji as e, count as c
 where e.id = c.id
