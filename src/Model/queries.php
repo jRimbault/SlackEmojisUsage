@@ -11,20 +11,18 @@ return [
                   GROUP BY e.names',
     // get data about a single emoji
     'emoji' => 'SELECT
-                    name,
-                    url, (
-                        SELECT group_concat(count)
-                        FROM (
-                            SELECT count
-                            FROM count
-                            WHERE id = (
-                                SELECT id
-                                FROM emoji
-                                WHERE name = ?
-                            )
-                            ORDER BY date ASC
-                        )
-                    ) AS count
-                FROM emoji
-                WHERE name = ?',
+                    e.name as name,
+                    e.url as url,
+                    group_concat(count) as count
+                FROM emoji AS e, (
+                    SELECT count
+                    FROM count
+                    WHERE id = (
+                        SELECT id
+                        FROM emoji
+                        WHERE name = ?
+                    )
+                    ORDER BY date ASC
+                )
+                WHERE e.name = ?',
 ];

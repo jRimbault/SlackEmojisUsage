@@ -72,3 +72,19 @@ SELECT
     ) AS count
 FROM emoji
 WHERE name = 'sad';
+
+SELECT
+    e.name as name,
+    e.url as url,
+    group_concat(count) as count
+FROM emoji AS e, (
+    SELECT count
+    FROM count
+    WHERE id = (
+        SELECT id
+        FROM emoji
+        WHERE name = 'sad'
+    )
+    ORDER BY date ASC
+)
+WHERE e.name = 'sad';
