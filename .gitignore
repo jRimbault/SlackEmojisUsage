@@ -1,4 +1,6 @@
-.vscode/
-.idea/
-__pycache__/
-*.json
+/vendor/
+/var/log/
+!/var/log/.gitkeep
+/var/cache/
+!/var/cache/.gitkeep
+/config/*.json
