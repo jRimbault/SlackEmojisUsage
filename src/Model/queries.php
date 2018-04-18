@@ -7,9 +7,9 @@ $getAllNames =
 // get all, without count order sequence guarantee
 $getAllEmoji =
     'SELECT
-        e.name as name,
-        e.url as url,
-        group_concat(c.count) as count
+        e.name AS name,
+        e.url AS url,
+        group_concat(c.count) AS count
     FROM
         emoji AS e,
         count AS c
@@ -19,9 +19,9 @@ $getAllEmoji =
 // get data about a single emoji, count order sequence guarenteed
 $selectEmoji =
     'SELECT
-        e.name as name,
-        e.url as url,
-        group_concat(count) as count
+        e.name AS name,
+        e.url AS url,
+        group_concat(count) AS count
     FROM emoji AS e, (
         SELECT count
         FROM count
@@ -31,6 +31,7 @@ $selectEmoji =
             WHERE name = ?
         )
         ORDER BY date ASC
+        LIMIT 168
     )
     WHERE e.name = ?';
 

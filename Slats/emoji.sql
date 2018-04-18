@@ -91,5 +91,6 @@ FROM emoji AS e, (
         WHERE name = 'sad'
     )
     ORDER BY date ASC
+    LIMIT 168
 )
 WHERE e.name = 'sad';
