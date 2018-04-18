@@ -20,7 +20,14 @@ class Emoji implements \JsonSerializable
         $this->count = $count;
     }
 
-    public static function find($name)
+    /**
+     * Returns the emoji named $name
+     *
+     * @param string $name
+     *
+     * @return Emoji|null
+     */
+    public static function find(string $name)
     {
         $dbh = Database::Instance();
         $query = (include self::$queries)['emoji'];
@@ -32,14 +39,21 @@ class Emoji implements \JsonSerializable
         return self::toEmoji($result);
     }
 
+    /**
+     * Iterator over all emojis in the database.
+     * The sequence of counts is guaranteed to be chronological.
+     *
+     * @yield Emoji
+     */
     public static function getAll()
     {
         $dbh = Database::Instance();
-        $query = (include self::$queries)['emoji'];
-        $statement = $dbh->prepare($query);
+        // this statement will be re-used a number of times
+        $statement = $dbh->prepare((include self::$queries)['emoji']);
         foreach (self::getAllEmojisNames() as $name) {
-            $result = $dbh->executeFetchAll($statement, [$name, $name])[0];
-            yield self::toEmoji($result);
+            yield self::toEmoji(
+                $dbh->executeFetchAll($statement, [$name, $name])[0]
+            );
         }
     }
 
@@ -78,12 +92,7 @@ class Emoji implements \JsonSerializable
      */
     private static function dataToEmojis($array): array
     {
-        return array_map(
-            function ($emoji) {
-                return self::toEmoji($emoji);
-            },
-            $array
-        );
+        return array_map(self . '::toEmoji', $array);
     }
 
     /**
