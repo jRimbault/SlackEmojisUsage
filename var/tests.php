@@ -10,9 +10,11 @@ use Api\Model\Emoji;
 $emojis = iterator_to_array(Emoji::getAll());
 $emojis = Emoji::getAllEmojisDataOneShot();
 
-echo json_encode(
-    $emojis,
-    JSON_UNESCAPED_UNICODE |
-    JSON_UNESCAPED_SLASHES |
-    JSON_PRETTY_PRINT
-);
+// echo json_encode(
+//     $emojis,
+//     JSON_UNESCAPED_UNICODE |
+//     JSON_UNESCAPED_SLASHES |
+//     JSON_PRETTY_PRINT
+// );
+
+echo (new Api\Controller\Slack)->emojisData();

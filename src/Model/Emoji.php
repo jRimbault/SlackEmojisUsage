@@ -92,7 +92,7 @@ class Emoji implements \JsonSerializable
      */
     private static function dataToEmojis($array): array
     {
-        return array_map(self . '::toEmoji', $array);
+        return array_map(self::class . '::toEmoji', $array);
     }
 
     /**
