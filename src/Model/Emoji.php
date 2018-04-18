@@ -63,29 +63,31 @@ class Emoji implements \JsonSerializable
         );
     }
 
-    public static function simpleGetAll()
-    {
-        return array_map(
-            function ($emoji) {
-                return [
-                    $emoji['name'],
-                    $emoji['url'],
-                    array_map('intval', explode(',', $emoji['count'])),
-                ];
-            },
-            Database::Instance()->simpleQuery(
-                (include 'queries.php')['general']
-            )
-        );
-    }
-
-    public static function simpleAllEmojis()
+    /**
+     * Returns all the data about all the emojis in one request.
+     * BUT, there's no guarantee the sequence of counts is in the
+     * chronological order.
+     *
+     * @return array[]
+     */
+    public static function getAllEmojisDataOneShot(): array
     {
         return array_map(
             function ($emoji) {
                 return new Emoji($emoji[0], $emoji[1], $emoji[2]);
             },
-            self::simpleGetAll()
+            array_map(
+                function ($emoji) {
+                    return [
+                        $emoji['name'],
+                        $emoji['url'],
+                        array_map('intval', explode(',', $emoji['count'])),
+                    ];
+                },
+                Database::Instance()->simpleQuery(
+                    (include 'queries.php')['general']
+                )
+            )
         );
     }
 

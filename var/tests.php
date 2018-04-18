@@ -8,7 +8,7 @@ use Api\Model\Emoji;
 
 
 echo json_encode(
-    Emoji::simpleAllEmojis(),
+    Emoji::getAllEmojisDataOneShot(),
     JSON_UNESCAPED_UNICODE |
     JSON_UNESCAPED_SLASHES |
     JSON_PRETTY_PRINT
