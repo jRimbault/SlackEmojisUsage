@@ -115,7 +115,7 @@ class Emoji implements \JsonSerializable
     public function getUrl() { return $this->url; }
     public function getCount() { return $this->count; }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             $this->name,
@@ -124,7 +124,7 @@ class Emoji implements \JsonSerializable
         ];
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return json_encode(
             $this->jsonSerialize(),
