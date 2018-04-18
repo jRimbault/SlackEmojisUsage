@@ -135,18 +135,25 @@ class Emoji implements \JsonSerializable
 
     public static function sortedGetAll(): array
     {
-        $emojis = iterator_to_array(self::getAll());
-        usort(
-            $emojis,
-            function ($a, $b) {
-                $sumA = array_sum($a->getCount());
-                $sumB = array_sum($b->getCount());
-                if ($sumA === $sumB) {
-                    return 0;
-                }
-                return $sumA < $sumB ? 1 : -1;
-            }
-        );
-        return $emojis;
+        return self::sortEmojis(iterator_to_array(self::getAll()));
+    }
+
+    /** sort desc */
+    private function sortEmojis($array): array
+    {
+        // go to hell usort
+        usort($array, self::class . '::customSortEmojis');
+        return $array;
+    }
+
+    /** sort desc */
+    private function customSortEmojis($eA, $eB): int
+    {
+        $sumA = array_sum($eA->getCount());
+        $sumB = array_sum($eB->getCount());
+        if ($sumA === $sumB) {
+            return 0;
+        }
+        return $sumA < $sumB ? 1 : -1;
     }
 }
