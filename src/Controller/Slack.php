@@ -93,7 +93,7 @@ class Slack extends Controller
      */
     public function emojisData()
     {
-        return $this->json(iterator_to_array(Emoji::getAll()));
+        return $this->json(Emoji::sortedGetAll());
     }
 
     /**

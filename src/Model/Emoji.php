@@ -132,4 +132,21 @@ class Emoji implements \JsonSerializable
             JSON_UNESCAPED_SLASHES
         );
     }
+
+    public static function sortedGetAll(): array
+    {
+        $emojis = iterator_to_array(self::getAll());
+        usort(
+            $emojis,
+            function ($a, $b) {
+                $sumA = array_sum($a->getCount());
+                $sumB = array_sum($b->getCount());
+                if ($sumA === $sumB) {
+                    return 0;
+                }
+                return $sumA < $sumB ? 1 : -1;
+            }
+        );
+        return $emojis;
+    }
 }
