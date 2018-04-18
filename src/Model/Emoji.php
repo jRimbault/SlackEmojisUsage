@@ -29,11 +29,7 @@ class Emoji implements \JsonSerializable
         if (!$result) {
             return null;
         }
-        return new Emoji(
-            $result['name'],
-            $result['url'],
-            array_map('intval', explode(',', $result['count']))
-        );
+        return self::toEmoji($result);
     }
 
     public static function getAll()
@@ -43,11 +39,7 @@ class Emoji implements \JsonSerializable
         $statement = $dbh->prepare($query);
         foreach (self::getAllEmojisNames() as $name) {
             $result = $dbh->executeFetchAll($statement, [$name, $name])[0];
-            yield new Emoji(
-                $result['name'],
-                $result['url'],
-                array_map('intval', explode(',', $result['count']))
-            );
+            yield self::toEmoji($result);
         }
     }
 
@@ -68,26 +60,45 @@ class Emoji implements \JsonSerializable
      * BUT, there's no guarantee the sequence of counts is in the
      * chronological order.
      *
-     * @return array[]
+     * @return Emoji[]
      */
     public static function getAllEmojisDataOneShot(): array
     {
+        return self::dataToEmojis(
+            Database::Instance()->simpleQuery(
+                (include 'queries.php')['general']
+            )
+        );
+    }
+
+    /**
+     * Returns an array of Emoji
+     *
+     * @return Emoji[]
+     */
+    private static function dataToEmojis($array): array
+    {
         return array_map(
             function ($emoji) {
-                return new Emoji($emoji[0], $emoji[1], $emoji[2]);
+                return self::toEmoji($emoji);
             },
-            array_map(
-                function ($emoji) {
-                    return [
-                        $emoji['name'],
-                        $emoji['url'],
-                        array_map('intval', explode(',', $emoji['count'])),
-                    ];
-                },
-                Database::Instance()->simpleQuery(
-                    (include 'queries.php')['general']
-                )
-            )
+            $array
+        );
+    }
+
+    /**
+     * Makes an instance of Emoji from an array
+     *
+     * @param array $array should have the indexes: name, url, count
+     *
+     * @return Emoji
+     */
+    private static function toEmoji($array): Emoji
+    {
+        return new Emoji(
+            $array['name'] ?? null,
+            $array['url'] ?? null,
+            array_map('intval', explode(',', $array['count'] ?? []))
         );
     }
 
