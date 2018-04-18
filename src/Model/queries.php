@@ -21,9 +21,10 @@ $selectEmoji =
     'SELECT
         e.name AS name,
         e.url AS url,
-        group_concat(count) AS count
+        group_concat(count) AS count,
+        group_concat(date) as date
     FROM emoji AS e, (
-        SELECT count
+        SELECT count, date
         FROM count
         WHERE id = (
             SELECT id

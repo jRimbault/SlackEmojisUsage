@@ -23,7 +23,7 @@ data.then(json => {
         chartOptions.data.datasets[i].fill = false;
     }
     for (let i = 0; i < emojis[0][2].length; i += 1) {
-        chartOptions.data.labels.push(i + 1);
+        chartOptions.data.labels.push(emojis[0][3][i].substr(0, 16));
     }
     const myChart = new Chart(ctx, chartOptions);
 });
