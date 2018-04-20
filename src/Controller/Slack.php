@@ -41,14 +41,7 @@ class Slack extends Controller
             return '401';
         }
 
-        Json::encodeToFile($_POST, new Path('/var/cache/postdump.json'));
-        $request->post->do('https://slack.com/api/chat.postMessage', [
-            'token' => $config['token'],
-            'channel' => $request->post->get('channel_id'),
-            'text' => $this->slackMessage()
-        ]);
-
-        return '';
+        return $this->slackMessage();
     }
 
     /**
@@ -105,7 +98,7 @@ class Slack extends Controller
      */
     private function slackMessage(int $n = 10): string
     {
-        return join(PHP_EOL,
+        return randomWords() . PHP_EOL . join(PHP_EOL,
             array_reduce(
                 array_slice(
                     Json::decodeFile(new Path($this->statsFile())),
@@ -120,4 +113,9 @@ class Slack extends Controller
             )
         );
     }
+}
+
+function randomWords()
+{
+    return 'Trick or treat ?';
 }
