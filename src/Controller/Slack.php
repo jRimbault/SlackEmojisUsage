@@ -36,15 +36,15 @@ class Slack extends Controller
     {
         $config = Config::Instance()->getArray();
 
-        if ($request->post()->get('token') !== $config['verificationtoken']) {
+        if ($request->post->get('token') !== $config['verificationtoken']) {
             http_response_code(401);
             return '401';
         }
 
         Json::encodeToFile($_POST, new Path('/var/cache/postdump.json'));
-        $request->post()->do('https://slack.com/api/chat.postMessage', [
+        $request->post->do('https://slack.com/api/chat.postMessage', [
             'token' => $config['token'],
-            'channel' => $request->post()->get('channel_id'),
+            'channel' => $request->post->get('channel_id'),
             'text' => $this->slackMessage()
         ]);
 
