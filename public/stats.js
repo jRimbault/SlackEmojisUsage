@@ -19,6 +19,25 @@ const chartOptions = {
             text: 'Top 5 Custom Emojis',
             display: true
         },
+        elements: {
+            point: {
+                radius: 0,
+                hitRadius: 5,
+                hoverRadius: 1
+            }
+        },
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display: false
+                }
+            }],
+            yAxes: [{
+                gridLines: {
+                    display: false
+                }
+            }]
+        }
     }
 };
 
