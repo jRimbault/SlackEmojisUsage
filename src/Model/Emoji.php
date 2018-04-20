@@ -11,13 +11,15 @@ class Emoji implements \JsonSerializable
     private $name = '';
     private $url = '';
     private $count = [];
+    private $dates = [];
     private static $queries = 'queries.php';
 
-    public function __construct($name = '', $url = '', $count = [])
+    public function __construct($name = '', $url = '', $count = [], $dates = [])
     {
         $this->name = $name;
         $this->url = $url;
         $this->count = $count;
+        $this->dates = $dates;
     }
 
     /**
@@ -107,7 +109,8 @@ class Emoji implements \JsonSerializable
         return new Emoji(
             $array['name'] ?? null,
             $array['url'] ?? null,
-            array_map('intval', explode(',', $array['count'] ?? []))
+            array_map('intval', explode(',', $array['count'] ?? [])),
+            explode(',', $array['date'] ?? [])
         );
     }
 
@@ -121,6 +124,7 @@ class Emoji implements \JsonSerializable
             $this->name,
             $this->url,
             $this->count,
+            $this->dates,
         ];
     }
 
