@@ -15,7 +15,7 @@ class Database extends \PDO
         parent::__construct('sqlite:' . new Path(self::$dbfile));
     }
 
-    public function Instance()
+    public static function Instance()
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
