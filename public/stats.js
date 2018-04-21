@@ -1,86 +1,10 @@
 'use strict';
 
-const ctx = document.getElementById('chart-emojis').getContext('2d');
+import {chartOptions} from './chartoptions.js';
+import {colors} from './colors.js';
 
-const chartOptions = {
-    type: 'line',
-    options: {
-        legend: {
-            display: true
-        },
-        tooltips: {
-            displayColors: false
-        },
-        title: {
-            text: 'Top 5 Custom Emojis',
-            display: true
-        },
-        elements: {
-            point: {
-                radius: 0,
-                hitRadius: 5,
-                hoverRadius: 1
-            }
-        },
-        scales: {
-            xAxes: [{
-                gridLines: {
-                    display: false
-                }
-            }],
-            yAxes: [{
-                gridLines: {
-                    display: false
-                }
-            }]
-        }
-    }
-};
 
-const colors = [{
-    backgroundColor: ['rgba(255, 99, 132, 0.2)'],
-    borderColor: ['rgba(255,99,132,1)']
-}, {
-    backgroundColor: ['rgba(54, 162, 235, 0.2)', ],
-    borderColor: ['rgba(54, 162, 235, 1)']
-}, {
-    backgroundColor: ['rgba(255, 206, 86, 0.2)'],
-    borderColor: ['rgba(255, 206, 86, 1)']
-}, {
-    backgroundColor: ['rgba(75, 192, 192, 0.2)'],
-    borderColor: ['rgba(75, 192, 192, 1)']
-}, {
-    backgroundColor: ['rgba(153, 102, 255, 0.2)'],
-    borderColor: ['rgba(153, 102, 255, 1)']
-}];
-
-const fetchEmojisTop = (n = 5) =>
-    fetch(`${window.location.origin}/slack/data/emoji/${n}`, {method: 'POST'})
-    .then(response => response.json())
-    .catch(error => { console.log(error); });
-
-fetchEmojisTop(5).then(emojis => {
-    const data = {
-        labels: [],
-        datasets: []
-    };
-    for (let i = 0; i < emojis.length; i += 1) {
-        data.datasets.push({
-            label: emojis[i][0],
-            data: emojis[i][2],
-            fill: false,
-            borderWidth: 1,
-            backgroundColor: colors[i].backgroundColor,
-            borderColor: colors[i].borderColor
-        })
-    }
-    // initialize empty labels
-    let size = emojis[0][2].length;
-    while (size--) data.labels[size] = '';
-    chartOptions.data = data;
-    const myChart = new Chart(ctx, chartOptions);
-});
-
+const canvas = document.getElementById('chart-emojis');
 
 /**
  * Resize canvas on breakpoints:
@@ -90,13 +14,64 @@ fetchEmojisTop(5).then(emojis => {
  * No on an resize event listener because I don't expect users
  * to resize their browser on their phone.
  */
-(function responsiveCanvas() {
-    const canvas = document.getElementById('chart-emojis');
-    if (window.innerWidth < 768) {
-        canvas.height = 70;
-    } else if (window.innerWidth < 991) {
-        canvas.height = 50;
-    } else if (window.innerWidth > 991) {
-        canvas.height = 40;
+(function responsiveCanvas(cvs) {
+    if (window.innerWidth < 600) {
+        return cvs.height = 80;
     }
+    if (window.innerWidth < 768) {
+        return cvs.height = 70;
+    }
+    if (window.innerWidth < 991) {
+        return cvs.height = 50;
+    }
+    return cvs.height;
+})(canvas);
+
+/**
+ * Lower scope for all chart related things
+ */
+(function initChart() {
+    function fetchEmojisTop(n = 5) {
+        return fetch(
+                `${window.location.origin}/slack/data/emoji/${n}`, {
+                    method: 'POST'
+                }
+            )
+            .then(response => response.json())
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
+    function dataReduce(datasets, emoji, idx) {
+        datasets.push({
+            label: emoji[0],
+            data: emoji[2],
+            fill: false,
+            borderWidth: 1,
+            backgroundColor: colors.backgroundColor[idx],
+            borderColor: colors.borderColor[idx]
+        });
+        return datasets;
+    }
+
+    function labelReduce(labels, date, idx) {
+        labels.push('');
+        return labels;
+    }
+
+    fetchEmojisTop(5)
+        .then(emojis => {
+            const datasets = emojis.reduce(dataReduce, []);
+            const labels = emojis[0][3].reduce(labelReduce, []);
+            return new Promise(resolve => resolve({
+                datasets: datasets,
+                labels: labels
+            }));
+        })
+        .then(data => {
+            chartOptions.data = data;
+            const chart = new Chart(canvas.getContext('2d'), chartOptions)
+            return new Promise(resolve => resolve(chart));
+        });
 })();
