@@ -26,9 +26,10 @@ class Kernel
 
     public function slackRoutes()
     {
-        $this->router->post('/slack/bot/top/emoji', Slack::class, 'emojisSlackMessage');
-        $this->router->get('/slack/statistics/emoji', Slack::class, 'emojisHtml');
-        $this->router->post('/slack/list/emoji', Slack::class, 'emojisList');
-        $this->router->post('/slack/data/emoji', Slack::class, 'emojisData');
+        $this->router
+            ->post('/slack/bot/top/emoji', Slack::class, 'emojisSlackMessage')
+            ->get('/slack/statistics/emoji', Slack::class, 'emojisHtml')
+            ->post('/slack/list/emoji', Slack::class, 'emojisList')
+            ->post('/slack/data/emoji', Slack::class, 'emojisData');
     }
 }
