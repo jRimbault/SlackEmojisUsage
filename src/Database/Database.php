@@ -8,14 +8,14 @@ use Conserto\Path;
 class Database extends \PDO
 {
     private static $instance;
-    private static $dbfile = '/var/resources/emoji.db';
+    private static $dbfile = '/var/resources/api.db';
 
     public function __construct()
     {
         parent::__construct('sqlite:' . new Path(self::$dbfile));
     }
 
-    public static function Instance()
+    public static function Instance(): self
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
@@ -23,15 +23,15 @@ class Database extends \PDO
         return self::$instance;
     }
 
-    public function executeFetchAll($statement, $params = [])
+    public function executeFetchAll($statement, $params = []): array
     {
         if ($statement && $statement->execute($params)) {
             return $statement->fetchAll(\PDO::FETCH_ASSOC);
         }
-        return null;
+        return [];
     }
 
-    public function simpleQuery($query)
+    public function simpleQuery($query): array
     {
         return $this->executeFetchAll($this->prepare($query));
     }

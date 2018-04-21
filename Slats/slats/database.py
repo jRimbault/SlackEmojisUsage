@@ -12,7 +12,7 @@ class Database:
     Interaction with the sqlite3 database
     """
     def __init__(self):
-        dbfile = PACKAGE_DIR + '/../../var/resources/emoji.db'
+        dbfile = PACKAGE_DIR + '/../../var/resources/api.db'
         self.conn = sqlite3.connect(dbfile)
         self.curr = self.conn.cursor()
         self.__init()

@@ -4,9 +4,9 @@ namespace Api;
 
 use Conserto\Path;
 use Conserto\Controller;
-use Conserto\Utils\Config;
-use Conserto\Server\Router;
 use Api\Controller\Slack;
+use Conserto\Utils\Config;
+use Conserto\Routing\Router;
 
 
 class Kernel

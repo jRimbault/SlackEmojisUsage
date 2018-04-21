@@ -4,16 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b7b3e81641fdbff4c1d12aa8d7e5b062",
-    "content-hash": "5cc6c262e4deebd8717deb8b6b1e12b3",
+    "hash": "eebc02ca916845f9bac1014e96b6a9d3",
+    "content-hash": "8744771eb87b1596326ea7cf29d3325e",
     "packages": [
         {
             "name": "jrimbault/conserto",
-            "version": "v0.5.2",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/jRimbault/conserto.git",
-                "reference": "8d2bab991672fb1e32ba5a5e8161e71eb629b1f6"
+                "reference": "bc62871b167a3673da341865dac9056ee27f8432"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/jRimbault/conserto/get/bc62871b167a3673da341865dac9056ee27f8432.zip",
+                "reference": "bc62871b167a3673da341865dac9056ee27f8432",
+                "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
@@ -26,11 +32,7 @@
                     "Conserto\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Conserto\\Tests\\": "tests/src/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -41,7 +43,8 @@
                 }
             ],
             "description": "Router, Controller and helper classes",
-            "time": "2018-03-31 15:30:18"
+            "homepage": "https://bitbucket.org/jRimbault/conserto",
+            "time": "2018-04-02 17:49:31"
         },
         {
             "name": "symfony/polyfill-mbstring",

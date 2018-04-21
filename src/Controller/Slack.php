@@ -7,7 +7,7 @@ use Conserto\Path;
 use Api\Model\Emoji;
 use Conserto\Controller;
 use Conserto\Utils\Config;
-use Conserto\Server\Http\Request;
+use Conserto\Http\Request;
 
 
 class Slack extends Controller
