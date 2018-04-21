@@ -4,10 +4,6 @@ const ctx = document.getElementById('chart-emojis').getContext('2d');
 
 const chartOptions = {
     type: 'line',
-    data: {
-        labels: [],
-        datasets: []
-    },
     options: {
         legend: {
             display: true
@@ -58,9 +54,9 @@ const colors = [{
     borderColor: ['rgba(153, 102, 255, 1)']
 }];
 
-const data = new Promise(resolve => {
+const fetchEmojisTop = (n = 5) => new Promise(resolve => {
     const r = fetch(
-        window.location.origin + '/slack/data/emoji', {
+        window.location.origin + '/slack/data/emoji/' + String(n), {
             method: 'POST'
         }
     );
@@ -72,25 +68,25 @@ const data = new Promise(resolve => {
     });
 });
 
-data.then(json => {
-    const top = 5;
-    const emojis = json.slice(0, top);
-    for (let i = 0; i < top; i += 1) {
-        chartOptions.data.datasets[i] = {};
-        Object.assign(
-            chartOptions.data.datasets[i],
-            {
-                label: emojis[i][0],
-                data: emojis[i][2],
-                fill: false,
-                borderWidth: 1
-            }
-        );
-        Object.assign(chartOptions.data.datasets[i], colors[i]);
+fetchEmojisTop(5).then(emojis => {
+    const data = {
+        labels: [],
+        datasets: []
+    };
+    for (let i = 0; i < emojis.length; i += 1) {
+        data.datasets.push({
+            label: emojis[i][0],
+            data: emojis[i][2],
+            fill: false,
+            borderWidth: 1,
+            backgroundColor: colors[i].backgroundColor,
+            borderColor: colors[i].borderColor
+        })
     }
     // initialize empty labels
     let size = emojis[0][2].length;
-    while (size--) chartOptions.data.labels[size] = '';
+    while (size--) data.labels[size] = '';
+    chartOptions.data = data;
     const myChart = new Chart(ctx, chartOptions);
 });
 

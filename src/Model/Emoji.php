@@ -137,9 +137,19 @@ class Emoji implements \JsonSerializable
         );
     }
 
-    public static function sortedGetAll(): array
+    /**
+     * Get the sorted $n top emojis
+     *
+     * @param int $n
+     * @return Emoji[]
+     */
+    public static function sortedGetAll($n = null): array
     {
-        return self::sortEmojis(iterator_to_array(self::getAll()));
+        return array_slice(
+            self::sortEmojis(iterator_to_array(self::getAll())),
+            0,
+            $n
+        );
     }
 
     /** sort desc */

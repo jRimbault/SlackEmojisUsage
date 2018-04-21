@@ -30,6 +30,6 @@ class Kernel
             ->post('/slack/bot/top/emoji', Slack::class, 'emojisSlackMessage')
             ->get('/slack/statistics/emoji', Slack::class, 'emojisHtml')
             ->post('/slack/list/emoji', Slack::class, 'emojisList')
-            ->post('/slack/data/emoji', Slack::class, 'emojisData');
+            ->post('/slack/data/emoji/{n}', Slack::class, 'emojisData');
     }
 }
