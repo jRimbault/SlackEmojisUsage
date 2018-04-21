@@ -24,7 +24,7 @@ class Slack extends Controller
     }
 
     /**
-     * @Route("/slack/statistics/emoji", methods="POST")
+     * @Route("/slack/bot/top/emoji", methods="POST")
      *
      * Called by Slack and sends back a message containing the top 10
      * current emojis
@@ -54,7 +54,7 @@ class Slack extends Controller
      */
     public function emojisHtml(Request $request)
     {
-        $emojis = Json::DecodeFile(new Path($this->statsFile()));
+        $emojis = $this->getDataLastSnapshot();
         return $this->render('slack/statistics/emoji.html.twig', [
             'emojis' => $emojis,
             'date' => filemtime(new Path($this->statsFile())),
@@ -101,7 +101,7 @@ class Slack extends Controller
         return randomWords() . PHP_EOL . join(PHP_EOL,
             array_reduce(
                 array_slice(
-                    Json::decodeFile(new Path($this->statsFile())),
+                    $this->getDataLastSnapshot(),
                     0,
                     $n
                 ),
@@ -112,6 +112,11 @@ class Slack extends Controller
                 []
             )
         );
+    }
+
+    private function getDataLastSnapshot()
+    {
+        return Json::decodeFile(new Path($this->statsFile()));
     }
 }
 
