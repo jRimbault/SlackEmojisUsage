@@ -93,3 +93,23 @@ data.then(json => {
     while (size--) chartOptions.data.labels[size] = '';
     const myChart = new Chart(ctx, chartOptions);
 });
+
+
+/**
+ * Resize canvas on breakpoints:
+ * - 1200px
+ * - 991px
+ * - 768px
+ * No on an resize event listener because I don't expect users
+ * to resize their browser on their phone.
+ */
+(function responsiveCanvas() {
+    const canvas = document.getElementById('chart-emojis');
+    if (window.innerWidth < 768) {
+        canvas.height = 70;
+    } else if (window.innerWidth < 991) {
+        canvas.height = 50;
+    } else if (window.innerWidth > 991) {
+        canvas.height = 40;
+    }
+})();
