@@ -54,19 +54,10 @@ const colors = [{
     borderColor: ['rgba(153, 102, 255, 1)']
 }];
 
-const fetchEmojisTop = (n = 5) => new Promise(resolve => {
-    const r = fetch(
-        window.location.origin + '/slack/data/emoji/' + String(n), {
-            method: 'POST'
-        }
-    );
-    r.then(response => {
-        return resolve(response.json());
-    });
-    r.catch(error => {
-        console.log(error);
-    });
-});
+const fetchEmojisTop = (n = 5) =>
+    fetch(`${window.location.origin}/slack/data/emoji/${n}`, {method: 'POST'})
+    .then(response => response.json())
+    .catch(error => { console.log(error); });
 
 fetchEmojisTop(5).then(emojis => {
     const data = {
