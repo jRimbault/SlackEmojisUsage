@@ -60,18 +60,21 @@ const canvas = document.getElementById('chart-emojis');
         return labels;
     }
 
+    function processEmojis(emojis) {
+        return new Promise(resolve => resolve({
+            datasets: emojis.reduce(dataReduce, []),
+            labels: emojis[0][3].reduce(labelReduce, [])
+        }));
+    }
+
+    function makeChart(data) {
+        chartOptions.data = data;
+        return new Promise(resolve => resolve(
+            new Chart(canvas.getContext('2d'), chartOptions)
+        ));
+    }
+
     fetchEmojisTop(5)
-        .then(emojis => {
-            const datasets = emojis.reduce(dataReduce, []);
-            const labels = emojis[0][3].reduce(labelReduce, []);
-            return new Promise(resolve => resolve({
-                datasets: datasets,
-                labels: labels
-            }));
-        })
-        .then(data => {
-            chartOptions.data = data;
-            const chart = new Chart(canvas.getContext('2d'), chartOptions)
-            return new Promise(resolve => resolve(chart));
-        });
+        .then(processEmojis)
+        .then(makeChart);
 })();
