@@ -19,7 +19,7 @@ export const chartOptions = {
         },
         title: {
             text: 'Top 5 Custom Emojis',
-            display: true
+            display: false
         },
         scales: {
             xAxes: [{
