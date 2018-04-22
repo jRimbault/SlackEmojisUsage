@@ -1,7 +1,7 @@
 'use strict';
 
-import {chartOptions} from './chartoptions.js';
-import {colors} from './colors.js';
+import {chartOptions,} from './chartoptions.js';
+import {colors,} from './colors.js';
 
 
 const canvas = document.getElementById('chart-emojis');
@@ -30,10 +30,10 @@ const canvas = document.getElementById('chart-emojis');
 (function initChart() {
     function fetchEmojisTop(n = 5) {
         return fetch(
-                `${window.location.origin}/slack/data/emoji/${n}`, {
-                    method: 'POST'
-                }
-            )
+            `${window.location.origin}/slack/data/emoji/${n}`, {
+                method: 'POST',
+            }
+        )
             .then(response => response.json())
             .catch(error => {
                 console.log(error);
@@ -47,7 +47,7 @@ const canvas = document.getElementById('chart-emojis');
             fill: false,
             borderWidth: 1,
             backgroundColor: colors.backgroundColor[idx],
-            borderColor: colors.borderColor[idx]
+            borderColor: colors.borderColor[idx],
         });
         return datasets;
     }
@@ -60,7 +60,7 @@ const canvas = document.getElementById('chart-emojis');
     function processEmojis(emojis) {
         return new Promise(resolve => resolve({
             datasets: emojis.reduce(dataReduce, []),
-            labels: emojis[0][3].reduce(labelReduce, [])
+            labels: emojis[0][3].reduce(labelReduce, []),
         }));
     }
 

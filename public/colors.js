@@ -20,7 +20,7 @@ export const colors = {
         '#ebfbee',
         '#f4fce3',
         '#fff9db',
-        '#fff4e6'
+        '#fff4e6',
     ],
     borderColor: [
         'rgba(255,99,132,1)',
@@ -40,6 +40,6 @@ export const colors = {
         '#2b8a3e',
         '#5c940d',
         '#e67700',
-        '#d9480f'
-    ]
-}
+        '#d9480f',
+    ],
+};
