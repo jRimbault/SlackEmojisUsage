@@ -7,10 +7,7 @@ import {colors} from './colors.js';
 const canvas = document.getElementById('chart-emojis');
 
 /**
- * Resize canvas on breakpoints:
- * - 1200px
- * - 991px
- * - 768px
+ * Resize canvas on breakpoints
  * No on an resize event listener because I don't expect users
  * to resize their browser on their phone.
  */
