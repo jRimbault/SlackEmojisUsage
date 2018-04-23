@@ -8,7 +8,7 @@ const canvas = document.getElementById('chart-emojis');
 
 /**
  * Resize canvas on breakpoints
- * No on an resize event listener because I don't expect users
+ * Not on an resize event listener because I don't expect users
  * to resize their browser on their phone.
  */
 (function responsiveCanvas(cvs) {

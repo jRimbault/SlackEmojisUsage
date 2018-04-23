@@ -8,30 +8,30 @@ export const chartOptions = {
             point: {
                 radius: 0,
                 hitRadius: 5,
-                hoverRadius: 1
-            }
+                hoverRadius: 1,
+            },
         },
         legend: {
-            display: true
+            display: true,
         },
         tooltips: {
-            displayColors: false
+            displayColors: false,
         },
         title: {
             text: 'Top 5 Custom Emojis',
-            display: false
+            display: false,
         },
         scales: {
             xAxes: [{
                 gridLines: {
-                    display: false
-                }
-            }],
+                    display: false,
+                },
+            },],
             yAxes: [{
                 gridLines: {
-                    display: false
-                }
-            }]
-        }
-    }
+                    display: false,
+                },
+            },],
+        },
+    },
 };
