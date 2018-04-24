@@ -121,9 +121,9 @@ class Emoji implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            $this->name,
-            $this->url,
-            [
+            'name' => $this->name,
+            'url' => $this->url,
+            'data' => [
                 $this->count,
                 $this->dates,
             ],

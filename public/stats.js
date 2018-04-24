@@ -53,8 +53,8 @@ const canvas = document.getElementById('chart-emojis');
 
     function dataReduce(datasets, emoji, idx) {
         datasets.push({
-            label: emoji[0],
-            data: dataPoint(emoji[2]),
+            label: emoji.name,
+            data: dataPoint(emoji.data),
             fill: false,
             borderWidth: 1,
             backgroundColor: colors.backgroundColor[idx],
