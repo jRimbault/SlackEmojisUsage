@@ -40,10 +40,21 @@ const canvas = document.getElementById('chart-emojis');
             });
     }
 
+    function dataPoint(data) {
+        const points = [];
+        for (let i = 0; i < data[0].length; i += 1) {
+            points.push({
+                y: data[0][i],
+                x: data[1][i],
+            });
+        }
+        return points;
+    }
+
     function dataReduce(datasets, emoji, idx) {
         datasets.push({
             label: emoji[0],
-            data: emoji[2],
+            data: dataPoint(emoji[2]),
             fill: false,
             borderWidth: 1,
             backgroundColor: colors.backgroundColor[idx],
@@ -60,7 +71,6 @@ const canvas = document.getElementById('chart-emojis');
     function processEmojis(emojis) {
         return new Promise(resolve => resolve({
             datasets: emojis.reduce(dataReduce, []),
-            labels: emojis[0][3].reduce(labelReduce, []),
         }));
     }
 

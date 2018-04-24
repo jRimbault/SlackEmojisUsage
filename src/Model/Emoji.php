@@ -123,8 +123,10 @@ class Emoji implements \JsonSerializable
         return [
             $this->name,
             $this->url,
-            $this->count,
-            $this->dates,
+            [
+                $this->count,
+                $this->dates,
+            ],
         ];
     }
 
