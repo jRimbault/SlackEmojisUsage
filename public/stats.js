@@ -27,7 +27,7 @@ const canvas = document.getElementById('chart-emojis');
 /**
  * Lower scope for all chart related things
  */
-(function initChart() {
+function initChart() {
     function fetchEmojisTop(n = 5) {
         return fetch(
             `${window.location.origin}/slack/data/emoji/${n}`, {
@@ -81,7 +81,11 @@ const canvas = document.getElementById('chart-emojis');
         ));
     }
 
-    fetchEmojisTop(5)
-        .then(processEmojis)
-        .then(makeChart);
-})();
+    return (n = 5) => {
+        return fetchEmojisTop(n)
+            .then(processEmojis)
+            .then(makeChart);
+    };
+};
+
+const chart = initChart()(5);
