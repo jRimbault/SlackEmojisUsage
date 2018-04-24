@@ -40,7 +40,7 @@ const canvas = document.getElementById('chart-emojis');
             });
     }
 
-    function dataPoint(data) {
+    function makeDataPoints(data) {
         const points = [];
         for (let i = 0; i < data[0].length; i += 1) {
             points.push({
@@ -54,7 +54,7 @@ const canvas = document.getElementById('chart-emojis');
     function dataReduce(datasets, emoji, idx) {
         datasets.push({
             label: emoji.name,
-            data: dataPoint(emoji.data),
+            data: makeDataPoints(emoji.data),
             fill: false,
             borderWidth: 1,
             backgroundColor: colors.backgroundColor[idx],
