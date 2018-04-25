@@ -88,4 +88,5 @@ function initChart() {
     };
 };
 
-const chart = initChart()(5);
+const fetchEmojisTop = initChart();
+fetchEmojisTop(5);
