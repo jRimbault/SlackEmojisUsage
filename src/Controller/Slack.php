@@ -58,7 +58,7 @@ class Slack extends Controller
         return $this->render('slack/statistics/emoji.html.twig', [
             'emojis' => $emojis,
             'date' => filemtime(new Path($this->statsFile())),
-            'total' => array_reduce($emojis, function($total, $emoji) {
+            'total' => array_reduce($emojis, function ($total, $emoji) {
                 return $total += $emoji[0];
             }, 0)
         ]);
@@ -106,14 +106,15 @@ class Slack extends Controller
      */
     private function slackMessage(int $n = 10): string
     {
-        return randomWords() . PHP_EOL . join(PHP_EOL,
+        return randomWords() . PHP_EOL . join(
+            PHP_EOL,
             array_reduce(
                 array_slice(
                     $this->getDataLastSnapshot(),
                     0,
                     $n
                 ),
-                function($text, $emoji) {
+                function ($text, $emoji) {
                     array_push($text, ":$emoji[1]: $emoji[0]");
                     return $text;
                 },

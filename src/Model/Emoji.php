@@ -31,7 +31,7 @@ class Emoji implements \JsonSerializable
      */
     public static function find(string $name)
     {
-        $dbh = Database::Instance();
+        $dbh = Database::instance();
         $query = (include self::$queries)['emoji'];
         $statement = $dbh->prepare($query);
         $result = $dbh->executeFetchAll($statement, [$name, $name])[0];
@@ -49,7 +49,7 @@ class Emoji implements \JsonSerializable
      */
     public static function getAll()
     {
-        $dbh = Database::Instance();
+        $dbh = Database::instance();
         // this statement will be re-used a number of times
         $statement = $dbh->prepare((include self::$queries)['emoji']);
         foreach (self::getAllEmojisNames() as $name) {
@@ -65,7 +65,7 @@ class Emoji implements \JsonSerializable
             function ($value) {
                 return $value['name'];
             },
-            Database::Instance()->simpleQuery(
+            Database::instance()->simpleQuery(
                 (include self::$queries)['names']
             )
         );
@@ -81,7 +81,7 @@ class Emoji implements \JsonSerializable
     public static function getAllEmojisDataOneShot(): array
     {
         return self::dataToEmojis(
-            Database::Instance()->simpleQuery(
+            Database::instance()->simpleQuery(
                 (include 'queries.php')['general']
             )
         );
@@ -114,9 +114,20 @@ class Emoji implements \JsonSerializable
         );
     }
 
-    public function getName() { return $this->name; }
-    public function getUrl() { return $this->url; }
-    public function getCount() { return $this->count; }
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    public function getCount()
+    {
+        return $this->count;
+    }
 
     public function jsonSerialize(): array
     {
