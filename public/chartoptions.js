@@ -1,7 +1,7 @@
 'use strict';
 
 
-export const chartOptions = {
+const chartOptions = {
     type: 'line',
     options: {
         elements: {
