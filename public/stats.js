@@ -60,11 +60,6 @@ function initChart() {
         return datasets;
     }
 
-    function labelReduce(labels, date, idx) {
-        labels.push('');
-        return labels;
-    }
-
     function processEmojis(emojis) {
         return new Promise(resolve => resolve({
             datasets: emojis.reduce(dataReduce, []),
@@ -83,7 +78,7 @@ function initChart() {
             .then(processEmojis)
             .then(makeChart);
     };
-};
+}
 
 const fetchEmojisTop = initChart();
 fetchEmojisTop(5);
