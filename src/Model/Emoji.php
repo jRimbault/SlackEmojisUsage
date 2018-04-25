@@ -59,7 +59,7 @@ class Emoji implements \JsonSerializable
         }
     }
 
-    private static function getAllEmojisNames(): array
+    public static function getAllEmojisNames(): array
     {
         return array_map(
             function ($value) {

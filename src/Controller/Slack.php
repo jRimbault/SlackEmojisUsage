@@ -89,6 +89,9 @@ class Slack extends Controller
     public function emojisData(Request $request, $n = 5)
     {
         if (!is_numeric($n)) {
+            if (in_array($n, Emoji::getAllEmojisNames())) {
+                return $this->json([Emoji::find($n)]);
+            }
             return $this->json([], 400);
         }
         return $this->json(Emoji::sortedGetAll((int)$n));
