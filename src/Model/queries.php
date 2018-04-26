@@ -29,12 +29,12 @@ FROM emoji AS e, (
     WHERE id = (
         SELECT id
         FROM emoji
-        WHERE name = ?
+        WHERE name = :name
     )
     ORDER BY date ASC
-    LIMIT 168
+    LIMIT :limit
 )
-WHERE e.name = ?
+WHERE e.name = :name
 SQL;
 
 

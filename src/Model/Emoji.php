@@ -34,7 +34,7 @@ class Emoji implements \JsonSerializable
         $dbh = Database::instance();
         $query = (include self::$queries)['emoji'];
         $statement = $dbh->prepare($query);
-        $result = $dbh->executeFetchAll($statement, [$name, $name])[0];
+        $result = self::emojiFetch($statement, $name, 168);
         if (!$result) {
             return null;
         }
@@ -54,11 +54,31 @@ class Emoji implements \JsonSerializable
         $statement = $dbh->prepare((include self::$queries)['emoji']);
         foreach (self::getAllEmojisNames() as $name) {
             yield self::toEmoji(
-                $dbh->executeFetchAll($statement, [$name, $name])[0]
+                self::emojiFetch($statement, $name, 168)
             );
         }
     }
 
+    /**
+     * The particular semantics of the query makes it painful
+     * to write in several place
+     */
+    private static function emojiFetch($statement, $name, $limit = 168)
+    {
+        return Database::instance()->executeFetchAll(
+            $statement,
+            [
+                'name' => $name,
+                'limit' => $limit
+            ]
+        )[0];
+    }
+
+    /**
+     * Get the names of all the custom emojis
+     *
+     * @return string[]
+     */
     public static function getAllEmojisNames(): array
     {
         return array_map(
