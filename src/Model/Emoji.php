@@ -63,8 +63,11 @@ class Emoji implements \JsonSerializable
      * The particular semantics of the query makes it painful
      * to write in several place
      */
-    private static function emojiFetch($statement, $name, $limit = 168)
-    {
+    private static function emojiFetch(
+        \PDOStatement $statement,
+        string $name,
+        int $limit = 168
+    ) {
         return Database::instance()->executeFetchAll(
             $statement,
             [
