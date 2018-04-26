@@ -132,7 +132,7 @@ class Emoji implements \JsonSerializable
         return new Emoji(
             $array['name'] ?? null,
             $array['url'] ?? null,
-            array_map('intval', explode(',', $array['count'] ?? [])),
+            array_map('intval', explode(',', $array['count'] ?? '')),
             explode(',', $array['date'] ?? '')
         );
     }
