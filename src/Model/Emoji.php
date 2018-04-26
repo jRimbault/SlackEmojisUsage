@@ -2,17 +2,18 @@
 
 namespace Api\Model;
 
-use Conserto\Path;
 use Api\Database\Database;
 
-
+/**
+ * Models the relations between the Emoji object
+ * and the database tables: 'emoji' and 'count'
+ */
 class Emoji implements \JsonSerializable
 {
     private $name = '';
     private $url = '';
     private $count = [];
     private $dates = [];
-    const QUERIES = 'queries.php';
 
     public function __construct($name = '', $url = '', $count = [], $dates = [])
     {
@@ -42,26 +43,27 @@ class Emoji implements \JsonSerializable
     }
 
     /**
-     * Iterator over all emojis in the database.
-     * The sequence of counts is guaranteed to be chronological.
+     * Fetch a query from the php file containing all of the stored
+     * SQL queries
      *
-     * @yield Emoji
+     * @param string $name of the query
+     *
+     * @return string SQL
      */
-    public static function getAll()
+    private static function query(string $name): string
     {
-        $dbh = Database::instance();
-        // this statement will be re-used a number of times
-        $statement = $dbh->prepare(self::query('emoji'));
-        foreach (self::getAllEmojisNames() as $name) {
-            yield self::toEmoji(
-                self::emojiFetch($statement, $name, 168)
-            );
-        }
+        return (include 'queries.php')[$name];
     }
 
     /**
      * The particular semantics of the query makes it painful
      * to write in several place
+     *
+     * @param \PDOStatement $statement
+     * @param string $name
+     * @param int $limit
+     *
+     * @return array
      */
     private static function emojiFetch(
         \PDOStatement $statement,
@@ -78,19 +80,19 @@ class Emoji implements \JsonSerializable
     }
 
     /**
-     * Get the names of all the custom emojis
+     * Makes an instance of Emoji from an array
      *
-     * @return string[]
+     * @param array $array should have the indexes: name, url, count
+     *
+     * @return Emoji
      */
-    public static function getAllEmojisNames(): array
+    private static function toEmoji($array): Emoji
     {
-        return array_map(
-            function ($value) {
-                return $value['name'];
-            },
-            Database::instance()->simpleQuery(
-                self::query('names')
-            )
+        return new Emoji(
+            $array['name'] ?? null,
+            $array['url'] ?? null,
+            array_map('intval', explode(',', $array['count'] ?? '')),
+            explode(',', $array['date'] ?? '')
         );
     }
 
@@ -112,64 +114,17 @@ class Emoji implements \JsonSerializable
 
     /**
      * Returns an array of Emoji
+     * Converts data from the BDD to a list of Emojis
+     *
+     * @param array[] data returned from the DB
      *
      * @return Emoji[]
      */
     private static function dataToEmojis($array): array
     {
-        return array_map(self::class . '::toEmoji', $array);
-    }
-
-    /**
-     * Makes an instance of Emoji from an array
-     *
-     * @param array $array should have the indexes: name, url, count
-     *
-     * @return Emoji
-     */
-    private static function toEmoji($array): Emoji
-    {
-        return new Emoji(
-            $array['name'] ?? null,
-            $array['url'] ?? null,
-            array_map('intval', explode(',', $array['count'] ?? '')),
-            explode(',', $array['date'] ?? '')
-        );
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'name' => $this->name,
-            'url' => $this->url,
-            'data' => [
-                $this->count,
-                $this->dates,
-            ],
-        ];
-    }
-
-    public function __toString(): string
-    {
-        return json_encode(
-            $this->jsonSerialize(),
-            JSON_UNESCAPED_UNICODE |
-            JSON_UNESCAPED_SLASHES
+        return array_map(
+            self::class . '::toEmoji',
+            $array
         );
     }
 
@@ -188,31 +143,95 @@ class Emoji implements \JsonSerializable
         );
     }
 
-    /** sort desc */
-    private function sortEmojis($array): array
+    /**
+     * Sort desc
+     *
+     * @param Emoji[] $array
+     *
+     * @return Emoji[]
+     */
+    private static function sortEmojis($array): array
     {
         // go to hell usort
-        usort($array, function ($eA, $eB) {
-            $sumA = array_sum($eA->getCount());
-            $sumB = array_sum($eB->getCount());
-            if ($sumA === $sumB) {
-                return 0;
-            }
-            return $sumA < $sumB ? 1 : -1;
+        usort($array, function (Emoji $eA, Emoji $eB) {
+            return array_sum($eB->getCount()) <=> array_sum($eA->getCount());
         });
         return $array;
     }
 
     /**
-     * Fetch a query from the php file containing all of the stored
-     * SQL queries
+     * Iterator over all emojis in the database.
+     * The sequence of counts is guaranteed to be chronological.
      *
-     * @param string $name of the query
-     *
-     * @return string SQL
+     * @yield Emoji
      */
-    private static function query(string $name): string
+    public static function getAll()
     {
-        return (include self::QUERIES)[$name];
+        $dbh = Database::instance();
+        // this statement will be re-used a number of times
+        $statement = $dbh->prepare(self::query('emoji'));
+        foreach (self::getAllEmojisNames() as $name) {
+            yield self::toEmoji(
+                self::emojiFetch($statement, $name, 168)
+            );
+        }
+    }
+
+    /**
+     * Get the names of all the custom emojis
+     *
+     * @return string[]
+     */
+    public static function getAllEmojisNames(): array
+    {
+        return array_map(
+            function ($value) {
+                return $value['name'];
+            },
+            Database::instance()->simpleQuery(
+                self::query('names')
+            )
+        );
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    public function getCount()
+    {
+        return $this->count;
+    }
+
+    public function getDates()
+    {
+        return $this->dates;
+    }
+
+    public function __toString(): string
+    {
+        return json_encode(
+            $this->jsonSerialize(),
+            JSON_UNESCAPED_UNICODE |
+            JSON_UNESCAPED_SLASHES
+        );
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'name' => $this->name,
+            'url' => $this->url,
+            'data' => [
+                $this->count,
+                $this->dates,
+            ],
+        ];
     }
 }

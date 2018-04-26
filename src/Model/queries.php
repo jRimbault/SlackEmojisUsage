@@ -16,7 +16,7 @@ WHERE e.id = c.id
 GROUP BY e.name
 SQL;
 
-// get data about a single emoji, count order sequence guarenteed
+// get data about a single emoji, count order sequence guaranteed
 $selectEmoji = <<<'SQL'
 SELECT
     e.name AS name,
