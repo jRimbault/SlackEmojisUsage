@@ -80,21 +80,22 @@ class Slack extends Controller
     /**
      * @Route("/slack/data/emoji/{n}", methods="POST")
      *
-     * Returns the JSON data about the $n top emojis
+     * Returns the JSON data about the $n top emojis or about
+     * the emoji named $n
      *
      * @param Request $request
-     * @param int $n number of emojis
+     * @param mixed $n number of emojis or name of an emoji
      * @return string
      */
     public function emojisData(Request $request, $n = 5)
     {
-        if (!is_numeric($n)) {
-            if (in_array($n, Emoji::getAllEmojisNames())) {
-                return $this->json([Emoji::find($n)]);
-            }
-            return $this->json([], 400);
+        if (is_numeric($n)) {
+            return $this->json(Emoji::sortedGetAll((int)$n));
         }
-        return $this->json(Emoji::sortedGetAll((int)$n));
+        if (in_array((string)$n, Emoji::getAllEmojisNames())) {
+            return $this->json([Emoji::find((string)$n)]);
+        }
+        return $this->json([], 400);
     }
 
     /**
