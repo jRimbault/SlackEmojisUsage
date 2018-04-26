@@ -12,7 +12,7 @@ class Emoji implements \JsonSerializable
     private $url = '';
     private $count = [];
     private $dates = [];
-    private static $queries = 'queries.php';
+    const QUERIES = 'queries.php';
 
     public function __construct($name = '', $url = '', $count = [], $dates = [])
     {
@@ -32,7 +32,7 @@ class Emoji implements \JsonSerializable
     public static function find(string $name)
     {
         $dbh = Database::instance();
-        $query = (include self::$queries)['emoji'];
+        $query = self::query('emoji');
         $statement = $dbh->prepare($query);
         $result = self::emojiFetch($statement, $name, 168);
         if (!$result) {
@@ -51,7 +51,7 @@ class Emoji implements \JsonSerializable
     {
         $dbh = Database::instance();
         // this statement will be re-used a number of times
-        $statement = $dbh->prepare((include self::$queries)['emoji']);
+        $statement = $dbh->prepare(self::query('emoji'));
         foreach (self::getAllEmojisNames() as $name) {
             yield self::toEmoji(
                 self::emojiFetch($statement, $name, 168)
@@ -89,7 +89,7 @@ class Emoji implements \JsonSerializable
                 return $value['name'];
             },
             Database::instance()->simpleQuery(
-                (include self::$queries)['names']
+                self::query('names')
             )
         );
     }
@@ -201,5 +201,18 @@ class Emoji implements \JsonSerializable
             return $sumA < $sumB ? 1 : -1;
         });
         return $array;
+    }
+
+    /**
+     * Fetch a query from the php file containing all of the stored
+     * SQL queries
+     *
+     * @param string $name of the query
+     *
+     * @return string SQL
+     */
+    private static function query(string $name): string
+    {
+        return (include self::QUERIES)[$name];
     }
 }
