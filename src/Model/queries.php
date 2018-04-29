@@ -31,7 +31,7 @@ FROM emoji AS e, (
         FROM emoji
         WHERE name = :name
     )
-    ORDER BY date ASC
+    ORDER BY date DESC
     LIMIT :limit
 )
 WHERE e.name = :name
