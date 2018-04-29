@@ -33,7 +33,9 @@ class Slatser(Slacker):
         messages = []
         last_timestamp = None
 
+        cursor = spinner()
         while True:
+            print("Loading", next(cursor), end='\r')
             response = self.channels.history(
                 channel = channel,
                 latest  = last_timestamp,
@@ -71,3 +73,9 @@ class Slatser(Slacker):
         for emoji in self.emojis_list():
             total[emoji] = grep(':'+emoji+':', path)
         return total
+
+
+def spinner():
+    while True:
+        for cursor in '⣾⣽⣻⢿⡿⣟⣯⣷':
+            yield cursor

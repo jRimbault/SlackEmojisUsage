@@ -6,17 +6,17 @@ Main module
 """
 
 import json
+import shutil
 from slatser import Slatser
 from utils import write_file_json
 from database import Database
-
-TMPDIR = '/tmp/channels'
+import constants
 
 
 def make_stats(slack):
     """ Make statistics """
-    slack.download_history(TMPDIR)
-    emojis = slack.count_all_emojis(TMPDIR)
+    slack.download_history(constants.TMPDIR)
+    emojis = slack.count_all_emojis(constants.TMPDIR)
     urls = slack.emoji.list().body['emoji']
     dbh = Database()
 
@@ -40,3 +40,4 @@ def main(args):
         print(json.dumps(data, indent=2))
     if args.output:
         write_file_json(args.output, data)
+    shutil.rmtree(constants.TMPDIR)

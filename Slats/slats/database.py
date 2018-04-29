@@ -1,34 +1,32 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
 import sqlite3
-
-PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
+import queries
+import constants
 
 
 class Database:
     """
     Interaction with the sqlite3 database
     """
-    def __init__(self):
-        dbfile = PACKAGE_DIR + '/../../var/resources/api.db'
+    def __init__(self, path='/../../var/resources/api.db'):
+        dbfile = constants.PACKAGE_DIR + path
         self.conn = sqlite3.connect(dbfile)
         self.curr = self.conn.cursor()
-        self.__init()
+        self.__init_emoji_table()
+        self.__init_count_table()
+
+    def __init_emoji_table(self):
+        self.curr.execute(queries.INIT_TABLE_EMOJI)
+        self.conn.commit()
+
+    def __init_count_table(self):
+        self.curr.execute(queries.INIT_TABLE_COUNT)
+        self.conn.commit()
 
     def __get_all_emojis_data(self):
-        return self.curr.execute("""
-            SELECT
-                e.name as name,
-                e.url as url,
-                group_concat(c.count) as count
-            FROM
-                emoji AS e,
-                count AS c
-            WHERE e.id = c.id
-            GROUP BY e.name
-        """)
+        return self.curr.execute(queries.SELECT_ALL)
 
     def emojis(self, limit=168):
         """
@@ -41,60 +39,16 @@ class Database:
                 [int(i) for i in _row[2].split(',')][:limit]
             )
 
-    def __init_emoji_table(self):
-        self.curr.execute("""
-            CREATE TABLE IF NOT EXISTS emoji (
-                id    integer primary key autoincrement,
-                name  varchar (64) unique not null,
-                url   varchar (512) not null
-            )
-        """)
-
-    def __init_count_table(self):
-        self.curr.execute("""
-            CREATE TABLE IF NOT EXISTS count (
-                id    integer not null,
-                count integer not null,
-                date  datetime default current_timestamp,
-                foreign key (id) references emoji(id)
-            )
-        """)
-
-    def __init(self):
-        """
-        Initialize and make sure the database file has the right
-        tables with the right colomns
-        """
-        self.__init_emoji_table()
-        self.__init_count_table()
-
     def new_emoji(self, name, url=''):
         """
         Create a new record of a new emoji
         """
-        self.curr.execute(
-            "INSERT OR IGNORE INTO emoji (name, url) VALUES (?, ?)", (name, url)
-        )
+        self.curr.execute(queries.INSERT_NEW_EMOJI, (name, url))
         self.conn.commit()
 
     def new_count(self, name, count=0):
         """
         Make a new datapoint
         """
-        self.curr.execute("""
-            INSERT OR IGNORE INTO count (id, count) VALUES
-                ((SELECT id FROM emoji WHERE name = ?), ?)
-            """,
-            (name, count)
-        )
+        self.curr.execute(queries.INSERT_NEW_COUNT, (name, count))
         self.conn.commit()
-
-
-
-def testing():
-    dbh = Database()
-    # dbh.new_emoji('token')
-    # dbh.new_count('token', 20)
-    print([r for r in dbh.emojis()])
-
-#testing()
