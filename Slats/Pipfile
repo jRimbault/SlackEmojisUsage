@@ -12,8 +12,3 @@ name = "pypi"
 [packages]
 
 slacker = "*"
-
-
-[requires]
-
-python_version = "3.5"

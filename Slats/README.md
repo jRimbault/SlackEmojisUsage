@@ -48,3 +48,5 @@ CREATE TABLE IF NOT EXISTS count (
     foreign key (id) references emoji(id)
 );
 ```
+
+![diagram](diagram.png "Database diagram")
