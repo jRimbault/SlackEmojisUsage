@@ -32,10 +32,11 @@ class Emoji implements \JsonSerializable
      */
     public static function find(string $name)
     {
-        $dbh = Database::instance();
-        $query = self::query('emoji');
-        $statement = $dbh->prepare($query);
-        $result = self::emojiFetch($statement, $name, 168);
+        $result = self::emojiFetch(
+            Database::instance()->prepare(self::query('emoji')),
+            $name,
+            168
+        );
         if (!$result) {
             return null;
         }
@@ -137,7 +138,7 @@ class Emoji implements \JsonSerializable
     public static function sortedGetAll($n = null): array
     {
         return array_slice(
-            self::sortEmojis(iterator_to_array(self::getAll())),
+            self::sortEmojis(self::getAll()),
             0,
             $n
         );
@@ -165,7 +166,7 @@ class Emoji implements \JsonSerializable
      *
      * @yield Emoji
      */
-    public static function getAll()
+    public static function getEach()
     {
         $dbh = Database::instance();
         // this statement will be re-used a number of times
@@ -175,6 +176,17 @@ class Emoji implements \JsonSerializable
                 self::emojiFetch($statement, $name, 168)
             );
         }
+    }
+
+    /**
+     * Returns all the emojis.
+     * The sequence of counts is in the chronological order.
+     *
+     * @return Emoji[]
+     */
+    public static function getAll()
+    {
+        return iterator_to_array(self::getEach());
     }
 
     /**
