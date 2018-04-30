@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
-import queries
-import constants
+from . import queries
+from . import constants
 
 
 class Database:

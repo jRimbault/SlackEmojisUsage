@@ -5,8 +5,9 @@
 Extend Slacker to expose my own methods
 """
 
+import json
 from slacker import Slacker
-from utils import grep, mkdir, write_file_json
+from .utils import grep
 
 
 class Slatser(Slacker):
@@ -37,10 +38,10 @@ class Slatser(Slacker):
         while True:
             print("Loading", next(cursor), end='\r')
             response = self.channels.history(
-                channel = channel,
-                latest  = last_timestamp,
-                oldest  = 0,
-                count   = pagesize
+                channel=channel,
+                latest=last_timestamp,
+                oldest=0,
+                count=pagesize
             ).body
 
             messages.extend(response['messages'])
@@ -58,12 +59,11 @@ class Slatser(Slacker):
         Dump all channels's messages into distinct files
         yield their names and messages count
         """
-        mkdir(path)
         for channel_id in self.channels_list():
             messages = self.channel_full_history(channel_id)
-            write_file_json(
-                path + '/' + channel_id + '.json',
-                messages
+            print(
+                json.dumps(messages),
+                file=open(path + '/' + channel_id + '.json', mode='w')
             )
 
 

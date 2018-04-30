@@ -7,10 +7,9 @@ Main module
 
 import json
 import shutil
-from slatser import Slatser
-from utils import write_file_json
-from database import Database
-import constants
+from .slatser import Slatser
+from .database import Database
+from . import constants
 
 
 def make_stats(slack):
@@ -33,11 +32,13 @@ def make_stats(slack):
 
 def main(args):
     """ Main """
-    slack = Slatser(args.token)
-    data = make_stats(slack)
+    data = make_stats(Slatser(args.token))
 
     if args.pretty:
         print(json.dumps(data, indent=2))
     if args.output:
-        write_file_json(args.output, data)
+        print(
+            json.dumps(data),
+            file=open(args.output, mode='w')
+        )
     shutil.rmtree(constants.TMPDIR)

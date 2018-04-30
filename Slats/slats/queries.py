@@ -39,3 +39,25 @@ FROM
 WHERE e.id = c.id
 GROUP BY e.name
 """
+
+EMOJI_BY_NAME = """
+SELECT
+    e.name AS name,
+    e.url AS url,
+    group_concat(count) AS count,
+    group_concat(date) as date
+FROM emoji AS e, (
+    SELECT count, date
+    FROM count
+    WHERE id = (
+        SELECT id
+        FROM emoji
+        WHERE name = :name
+    )
+    ORDER BY date DESC
+    LIMIT :limit
+)
+WHERE e.name = :name
+"""
+
+EMOJI_NAMES = "SELECT name FROM emoji"
