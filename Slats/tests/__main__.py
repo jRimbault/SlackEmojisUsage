@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import slats
-from slats.emoji import Emoji
+from slats.model.emoji import Emoji
 
 
 def main():

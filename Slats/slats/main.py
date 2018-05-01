@@ -8,7 +8,7 @@ Main module
 import json
 import shutil
 from .slatser import Slatser
-from .emoji import Emoji
+from .model.emoji import Emoji
 from . import constants
 
 

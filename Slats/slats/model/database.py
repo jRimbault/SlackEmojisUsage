@@ -3,7 +3,7 @@
 
 import sqlite3
 from . import queries
-from . import constants
+from .. import constants
 
 
 class Database:
