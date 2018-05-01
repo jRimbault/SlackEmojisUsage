@@ -46,6 +46,7 @@
             "hashes": [
                 "sha256:646d8fb2ca04858374da1b54e9818f88dc2b254deb0f74bf0f3911773e7eaf94"
             ],
+            "index": "pypi",
             "version": "==0.9.65"
         },
         "urllib3": {
