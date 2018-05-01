@@ -25,7 +25,7 @@ def make_stats(slack):
             url = ''
         data.append([count, name, url])
         Emoji.new(name, url)
-        Emoji.newcount(name, count)
+        Emoji.count(name).new(count)
     return sorted(data, reverse=True)
 
 

@@ -20,7 +20,7 @@ class Emoji:
         ).fetchone()
         self.name = raw_data[0]
         self.url = raw_data[1]
-        self.count = list(reversed([int(i) for i in raw_data[2].split(',')]))
+        self.counts = list(reversed([int(i) for i in raw_data[2].split(',')]))
         self.dates = list(reversed([date for date in raw_data[3].split(',')]))
 
     def __str__(self):
@@ -29,10 +29,10 @@ class Emoji:
     def __iter__(self):
         yield 'name', self.name
         yield 'url', self.url
-        yield 'data', [self.count, self.dates]
+        yield 'data', [self.counts, self.dates]
 
     def sum(self):
-        return sum(self.count)
+        return sum(self.counts)
 
     @staticmethod
     def names():
@@ -58,6 +58,15 @@ class Emoji:
         DBH.conn.commit()
 
     @staticmethod
-    def newcount(name, count):
-        DBH.curr.execute(queries.INSERT_NEW_COUNT, (name, count))
+    def count(name):
+        return Count(name)
+
+
+class Count:
+    """ Count """
+    def __init__(self, name):
+        self.name = name
+
+    def new(self, count):
+        DBH.curr.execute(queries.INSERT_NEW_COUNT, (self.name, count))
         DBH.conn.commit()
