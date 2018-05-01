@@ -34,9 +34,7 @@ class Slatser(Slacker):
         messages = []
         last_timestamp = None
 
-        cursor = spinner()
         while True:
-            print("Loading", next(cursor), end='\r')
             response = self.channels.history(
                 channel=channel,
                 latest=last_timestamp,
