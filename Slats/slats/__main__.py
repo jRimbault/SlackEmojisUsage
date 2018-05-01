@@ -7,6 +7,7 @@ from .main import main
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
+        prog='Slats',
         description='''
 Count occurences of each custom emoji in Slack
 ''',

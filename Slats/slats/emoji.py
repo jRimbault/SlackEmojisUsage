@@ -5,15 +5,16 @@ from .database import Database
 from . import queries
 
 
+DBH = Database()
+
 class Emoji:
     """ Emoji """
 
     def __init__(self, name):
-        self.dbh = Database()
         self.__by_name(name)
 
     def __by_name(self, name, limit=168):
-        raw_data = self.dbh.curr.execute(
+        raw_data = DBH.curr.execute(
             queries.EMOJI_BY_NAME,
             {'name': name, 'limit': limit}
         ).fetchone()
@@ -50,3 +51,13 @@ class Emoji:
         for emoji in Emoji.all():
             emojis.append(emoji)
         return sorted(emojis, key=lambda e: e.sum())
+
+    @staticmethod
+    def new(name, url=''):
+        DBH.curr.execute(queries.INSERT_NEW_EMOJI, (name, url))
+        DBH.conn.commit()
+
+    @staticmethod
+    def newcount(name, count):
+        DBH.curr.execute(queries.INSERT_NEW_COUNT, (name, count))
+        DBH.conn.commit()

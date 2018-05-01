@@ -11,7 +11,7 @@ Usage:
 ```shell
 pipenv shell
 pipenv install
-python slats -h
+python -m slats -h
 ```
 
 ### Json snapshot
