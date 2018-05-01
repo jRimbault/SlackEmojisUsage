@@ -50,3 +50,7 @@ CREATE TABLE IF NOT EXISTS count (
 ```
 
 ![diagram](diagram.png "Database diagram")
+
+### Todo
+
+Count using collection.Counter instead of calling grep.
