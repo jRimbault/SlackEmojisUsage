@@ -8,7 +8,7 @@ Main module
 import json
 import shutil
 from .slatser import Slatser
-from .database import Database
+from .emoji import Emoji
 from . import constants
 
 
@@ -17,7 +17,6 @@ def make_stats(slack):
     slack.download_history(constants.TMPDIR)
     emojis = slack.count_all_emojis(constants.TMPDIR)
     urls = slack.emoji.list().body['emoji']
-    dbh = Database()
 
     data = []
     for name, count in zip(emojis.keys(), emojis.values()):
@@ -25,8 +24,8 @@ def make_stats(slack):
         if 'alias' in url:
             url = ''
         data.append([count, name, url])
-        dbh.new_emoji(name, url)
-        dbh.new_count(name, count)
+        Emoji.new(name, url)
+        Emoji.newcount(name, count)
     return sorted(data, reverse=True)
 
 
