@@ -12,90 +12,21 @@ use Conserto\Http\Request;
 
 class Slack extends Controller
 {
-    /**
-     * Get the path to the file containing the latest data
-     *
-     * @return string
-     */
-    private function statsFile(): string
-    {
-        return Config::Instance()->getstatsfile() ??
-               '/Slats/stats.json';
-    }
+    const snapshot = '/Slats/stats.json';
 
     /**
-     * @Route("/slack/bot/top/emoji", methods="POST")
-     *
      * Called by Slack and sends back a message containing the top 10
      * current emojis
      *
      * @param Request $request
      * @return string
+     *
+     * @Route("/slack/bot/top/emoji", methods="POST")
+     * @todo add parameter to route
      */
-    public function emojisSlackMessage(Request $request)
+    public function emojisSlackMessage(Request $request, $n = 10): string
     {
-        $config = Config::Instance()->getArray();
-
-        // if ($request->post->get('token') !== $config['verificationtoken']) {
-        //     http_response_code(401);
-        //     return '401';
-        // }
-
-        return $this->slackMessage();
-    }
-
-    /**
-     * @Route("/slack/statistics/emoji", methods="GET")
-     *
-     * Displays the list of emojis to a normal web user
-     *
-     * @param Request $request
-     * @return string
-     */
-    public function emojisHtml(Request $request)
-    {
-        $emojis = $this->getDataLastSnapshot();
-        return $this->render('slack/statistics/emoji.html.twig', [
-            'emojis' => $emojis,
-            'date' => filemtime(new Path($this->statsFile())),
-            'total' => array_reduce($emojis, function ($total, $emoji) {
-                return $total += $emoji[0];
-            }, 0)
-        ]);
-    }
-
-    /**
-     * @Route("/slack/list/emoji", methods="POST")
-     *
-     * Returns the JSON list of emojis
-     *
-     * @return string
-     */
-    public function emojisList()
-    {
-        header('Content-Type: application/json');
-        return file_get_contents(new Path('/Slats/stats.json'));
-    }
-
-    /**
-     * @Route("/slack/data/emoji/{n}", methods="POST")
-     *
-     * Returns the JSON data about the $n top emojis or about
-     * the emoji named $n
-     *
-     * @param Request $request
-     * @param mixed $n number of emojis or name of an emoji
-     * @return string
-     */
-    public function emojisData(Request $request, $n = 5)
-    {
-        if (is_numeric($n)) {
-            return $this->json(Emoji::sortedGetAll((int)$n));
-        }
-        if (in_array((string)$n, Emoji::getAllEmojisNames())) {
-            return $this->json([Emoji::find((string)$n)]);
-        }
-        return $this->json([], 400);
+        return $this->buildSlackMessage((int)$n);
     }
 
     /**
@@ -105,13 +36,13 @@ class Slack extends Controller
      * @param int $n number of emojis
      * @return string
      */
-    private function slackMessage(int $n = 10): string
+    private function buildSlackMessage(int $n = 10): string
     {
         return randomSentence() . PHP_EOL . join(
             PHP_EOL,
             array_reduce(
                 array_slice(
-                    $this->getDataLastSnapshot(),
+                    $this->getLastSnapshot(),
                     0,
                     $n
                 ),
@@ -124,9 +55,59 @@ class Slack extends Controller
         );
     }
 
-    private function getDataLastSnapshot()
+    /**
+     * @Route("/slack/statistics/emoji", methods="GET")
+     *
+     * Displays the list of emojis to a normal web user
+     *
+     * @param Request $request
+     * @return string
+     */
+    public function emojisHtml(Request $request): string
     {
-        return Json::decodeFile(new Path($this->statsFile()));
+        return $this->render('slack/statistics/emoji.html.twig', [
+            'emojis' => $this->getLastSnapshot(),
+            'date' => filemtime(new Path(self::snapshot)),
+        ]);
+    }
+
+    /**
+     * @Route("/slack/list/emoji", methods="POST")
+     *
+     * Returns the JSON list of emojis
+     *
+     * @return string
+     */
+    public function emojisList(): string
+    {
+        header('Content-Type: application/json');
+        return file_get_contents(new Path(self::snapshot));
+    }
+
+    /**
+     * @Route("/slack/data/emoji/{n}", methods="POST")
+     *
+     * Returns the JSON data about the $n top emojis or about
+     * the emoji named $n
+     *
+     * @param Request $request
+     * @param mixed $n number of emojis or name of an emoji
+     * @return string
+     */
+    public function emojisData(Request $request, $n = 5): string
+    {
+        if (is_numeric($n)) {
+            return $this->json(Emoji::sortedGetAll((int)$n));
+        }
+        if (in_array((string)$n, Emoji::getAllEmojisNames())) {
+            return $this->json([Emoji::find((string)$n)]);
+        }
+        return $this->json([], 400);
+    }
+
+    private function getLastSnapshot(): array
+    {
+        return Json::decodeFile(new Path(self::snapshot));
     }
 }
 
