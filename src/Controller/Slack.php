@@ -107,7 +107,7 @@ class Slack extends Controller
      */
     private function slackMessage(int $n = 10): string
     {
-        return randomWords() . PHP_EOL . join(
+        return randomSentence() . PHP_EOL . join(
             PHP_EOL,
             array_reduce(
                 array_slice(
@@ -130,8 +130,13 @@ class Slack extends Controller
     }
 }
 
-function randomWords()
+/**
+ * Returns a random sentence
+ *
+ * @return string sentence
+ */
+function randomSentence(): string
 {
-    $sentences = include 'sentences.php';
-    return $sentences[random_int(0, count($sentences) - 1)];
+    $s = include 'sentences.php';
+    return $s[random_int(0, count($s) - 1)];
 }
