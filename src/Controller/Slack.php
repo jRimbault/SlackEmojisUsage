@@ -83,19 +83,6 @@ class Slack extends Controller
     }
 
     /**
-     * @Route("/slack/list/emoji", methods="POST")
-     *
-     * Returns the JSON list of emojis
-     *
-     * @return string
-     */
-    public function emojisList(): string
-    {
-        header('Content-Type: application/json');
-        return file_get_contents(new Path(self::snapshot));
-    }
-
-    /**
      * @Route("/slack/data/emoji/{n}", methods="POST")
      *
      * Returns the JSON data about the $n top emojis or about

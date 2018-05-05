@@ -27,9 +27,8 @@ class Kernel
     public function slackRoutes()
     {
         $this->router
-            ->post('/slack/bot/top/emoji', Slack::class, 'emojisSlackMessage')
             ->get('/slack/statistics/emoji', Slack::class, 'emojisHtml')
-            ->post('/slack/list/emoji', Slack::class, 'emojisList')
+            ->post('/slack/bot/top/emoji', Slack::class, 'emojisSlackMessage')
             ->post('/slack/data/emoji/{n}', Slack::class, 'emojisData');
     }
 }
