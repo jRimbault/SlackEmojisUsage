@@ -1,10 +1,13 @@
 <?php
+/**
+ * Keep all SQL queries here
+ */
 
 // get all emojis' names
-$getAllNames = 'SELECT name from emoji';
+$names = 'SELECT name from emoji';
 
 // get all, without count order sequence guarantee
-$getAllEmoji = <<<'SQL'
+$general = <<<'SQL'
 SELECT
     e.name AS name,
     e.url AS url,
@@ -17,7 +20,7 @@ GROUP BY e.name
 SQL;
 
 // get data about a single emoji, count order sequence guaranteed
-$selectEmoji = <<<'SQL'
+$emoji = <<<'SQL'
 SELECT
     e.name AS name,
     e.url AS url,
@@ -39,7 +42,7 @@ SQL;
 
 
 return [
-    'names' => $getAllNames,
-    'general' => $getAllEmoji,
-    'emoji' => $selectEmoji,
+    'names' => $names,
+    'general' => $general,
+    'emoji' => $emoji,
 ];

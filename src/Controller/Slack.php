@@ -2,12 +2,12 @@
 
 namespace Api\Controller;
 
-use Conserto\Json;
-use Conserto\Path;
 use Api\Model\Emoji;
 use Conserto\Controller;
-use Conserto\Utils\Config;
+use Conserto\Error\RuntimeError;
 use Conserto\Http\Request;
+use Conserto\Json;
+use Conserto\Path;
 
 
 class Slack extends Controller
@@ -19,10 +19,11 @@ class Slack extends Controller
      * current emojis
      *
      * @param Request $request
+     * @param mixed $n
      * @return string
      *
      * @Route("/slack/bot/top/emoji", methods="POST")
-     * @todo add parameter to route
+     * @todo add parameter to route in Kernel and in Slack settings
      */
     public function emojisSlackMessage(Request $request, $n = 10): string
     {
@@ -39,20 +40,25 @@ class Slack extends Controller
     private function buildSlackMessage(int $n = 10): string
     {
         return randomSentence() . PHP_EOL . join(
-            PHP_EOL,
-            array_reduce(
-                array_slice(
-                    $this->getLastSnapshot(),
-                    0,
-                    $n
-                ),
-                function ($text, $emoji) {
-                    array_push($text, ":$emoji[1]: $emoji[0]");
-                    return $text;
-                },
-                []
-            )
-        );
+                PHP_EOL,
+                array_reduce(
+                    array_slice(
+                        $this->getLastSnapshot(),
+                        0,
+                        $n
+                    ),
+                    function ($text, $emoji) {
+                        array_push($text, ":$emoji[1]: $emoji[0]");
+                        return $text;
+                    },
+                    []
+                )
+            );
+    }
+
+    private function getLastSnapshot(): array
+    {
+        return Json::decodeFile(new Path(self::snapshot));
     }
 
     /**
@@ -65,10 +71,15 @@ class Slack extends Controller
      */
     public function emojisHtml(Request $request): string
     {
-        return $this->render('slack/statistics/emoji.html.twig', [
-            'emojis' => $this->getLastSnapshot(),
-            'date' => filemtime(new Path(self::snapshot)),
-        ]);
+        try {
+            return $this->render('slack/statistics/emoji.html.twig', [
+                'emojis' => $this->getLastSnapshot(),
+                'date' => filemtime(new Path(self::snapshot)),
+            ]);
+        } catch (RuntimeError $e) {
+            http_response_code(500);
+            return 'Whoops';
+        }
     }
 
     /**
@@ -104,11 +115,6 @@ class Slack extends Controller
         }
         return $this->json([], 400);
     }
-
-    private function getLastSnapshot(): array
-    {
-        return Json::decodeFile(new Path(self::snapshot));
-    }
 }
 
 /**
@@ -119,5 +125,5 @@ class Slack extends Controller
 function randomSentence(): string
 {
     $s = include 'sentences.php';
-    return $s[random_int(0, count($s) - 1)];
+    return $s[array_rand($s, 1)];
 }
