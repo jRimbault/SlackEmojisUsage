@@ -36,10 +36,10 @@ class Slack extends Controller
     {
         $config = Config::Instance()->getArray();
 
-        if ($request->post->get('token') !== $config['verificationtoken']) {
-            http_response_code(401);
-            return '401';
-        }
+        // if ($request->post->get('token') !== $config['verificationtoken']) {
+        //     http_response_code(401);
+        //     return '401';
+        // }
 
         return $this->slackMessage();
     }
@@ -132,5 +132,6 @@ class Slack extends Controller
 
 function randomWords()
 {
-    return 'Trick or treat ?';
+    $sentences = include 'sentences.php';
+    return $sentences[random_int(0, count($sentences) - 1)];
 }
