@@ -1,8 +1,10 @@
 <?php
 
-namespace Api\Model;
+namespace Api\Database\Model;
 
 use Api\Database\Database;
+use Conserto\Json;
+use Conserto\Path;
 
 /**
  * Models the relations between the Emoji object
@@ -10,6 +12,8 @@ use Api\Database\Database;
  */
 class Emoji implements \JsonSerializable
 {
+    const queries = 'queries.php';
+    const snapshot = '/Slats/stats.json';
     private $name = '';
     private $url = '';
     private $count = [];
@@ -24,6 +28,16 @@ class Emoji implements \JsonSerializable
     }
 
     /**
+     * Returns the last count of every emoji
+     *
+     * @return array
+     */
+    public static function snapshot(): array
+    {
+        return Json::decodeFile(new Path(self::snapshot));
+    }
+
+    /**
      * Returns the emoji named $name
      *
      * @param string $name
@@ -32,7 +46,7 @@ class Emoji implements \JsonSerializable
      */
     public static function find(string $name)
     {
-        $result = self::emojiFetch(
+        $result = self::fetch(
             Database::instance()->prepare(self::query('emoji')),
             $name,
             168
@@ -41,19 +55,6 @@ class Emoji implements \JsonSerializable
             return null;
         }
         return self::toEmoji($result);
-    }
-
-    /**
-     * Fetch a query from the php file containing all of the stored
-     * SQL queries
-     *
-     * @param string $name of the query
-     *
-     * @return string SQL
-     */
-    private static function query(string $name): string
-    {
-        return (include 'queries.php')[$name];
     }
 
     /**
@@ -66,7 +67,7 @@ class Emoji implements \JsonSerializable
      *
      * @return array
      */
-    private static function emojiFetch(
+    private static function fetch(
         \PDOStatement $statement,
         string $name,
         int $limit = 168
@@ -78,6 +79,37 @@ class Emoji implements \JsonSerializable
                 'limit' => $limit
             ]
         )[0];
+    }
+
+    /**
+     * Fetch a query from the php file containing all of the stored
+     * SQL queries
+     *
+     * @param string $name of the query
+     *
+     * @return string SQL
+     */
+    private static function query(string $name): string
+    {
+        return (include self::queries)[$name];
+    }
+
+    /**
+     * Returns all the emojis sorted.
+     * Or get the sorted $n top emojis
+     *
+     * The sequence of counts is in the chronological order.
+     *
+     * @param int $n
+     * @return Emoji[]
+     */
+    public static function all($n = null): array
+    {
+        return array_slice(
+            self::sort(iterator_to_array(self::each())),
+            0,
+            $n
+        );
     }
 
     /**
@@ -98,64 +130,17 @@ class Emoji implements \JsonSerializable
     }
 
     /**
-     * Returns all the data about all the emojis in one request.
-     * BUT, there's no guarantee the sequence of counts is in the
-     * chronological order.
-     *
-     * @return Emoji[]
-     */
-    public static function getAllEmojisDataOneShot(): array
-    {
-        return self::dataToEmojis(
-            Database::instance()->simpleQuery(
-                (include 'queries.php')['general']
-            )
-        );
-    }
-
-    /**
-     * Returns an array of Emoji
-     * Converts data from the BDD to a list of Emojis
-     *
-     * @param array[] data returned from the DB
-     *
-     * @return Emoji[]
-     */
-    private static function dataToEmojis($array): array
-    {
-        return array_map(
-            self::class . '::toEmoji',
-            $array
-        );
-    }
-
-    /**
-     * Get the sorted $n top emojis
-     *
-     * @param int $n
-     * @return Emoji[]
-     */
-    public static function sortedGetAll($n = null): array
-    {
-        return array_slice(
-            self::sortEmojis(self::getAll()),
-            0,
-            $n
-        );
-    }
-
-    /**
      * Sort desc
      *
      * @param Emoji[] $array
      *
      * @return Emoji[]
      */
-    private static function sortEmojis($array): array
+    private static function sort($array): array
     {
         // go to hell usort
-        usort($array, function (Emoji $eA, Emoji $eB) {
-            return array_sum($eB->getCount()) <=> array_sum($eA->getCount());
+        usort($array, function (Emoji $a, Emoji $b) {
+            return array_sum($b->getCount()) <=> array_sum($a->getCount());
         });
         return $array;
     }
@@ -166,27 +151,16 @@ class Emoji implements \JsonSerializable
      *
      * @yield Emoji
      */
-    public static function getEach()
+    public static function each()
     {
         $dbh = Database::instance();
         // this statement will be re-used a number of times
         $statement = $dbh->prepare(self::query('emoji'));
-        foreach (self::getAllEmojisNames() as $name) {
+        foreach (self::names() as $name) {
             yield self::toEmoji(
-                self::emojiFetch($statement, $name, 168)
+                self::fetch($statement, $name, 168)
             );
         }
-    }
-
-    /**
-     * Returns all the emojis.
-     * The sequence of counts is in the chronological order.
-     *
-     * @return Emoji[]
-     */
-    public static function getAll()
-    {
-        return iterator_to_array(self::getEach());
     }
 
     /**
@@ -194,7 +168,7 @@ class Emoji implements \JsonSerializable
      *
      * @return string[]
      */
-    public static function getAllEmojisNames(): array
+    public static function names(): array
     {
         return array_map(
             function ($value) {
@@ -216,14 +190,14 @@ class Emoji implements \JsonSerializable
         return $this->url;
     }
 
-    public function getCount()
-    {
-        return $this->count;
-    }
-
     public function getDates()
     {
         return $this->dates;
+    }
+
+    public function getCount()
+    {
+        return $this->count;
     }
 
     public function __toString(): string

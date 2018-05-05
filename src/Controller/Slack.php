@@ -2,18 +2,15 @@
 
 namespace Api\Controller;
 
-use Api\Model\Emoji;
+use Api\Database\Model\Emoji;
 use Conserto\Controller;
 use Conserto\Error\RuntimeError;
 use Conserto\Http\Request;
-use Conserto\Json;
 use Conserto\Path;
 
 
 class Slack extends Controller
 {
-    const snapshot = '/Slats/stats.json';
-
     /**
      * Called by Slack and sends back a message containing the top 10
      * current emojis
@@ -43,7 +40,7 @@ class Slack extends Controller
                 PHP_EOL,
                 array_reduce(
                     array_slice(
-                        $this->getLastSnapshot(),
+                        Emoji::snapshot(),
                         0,
                         $n
                     ),
@@ -54,11 +51,6 @@ class Slack extends Controller
                     []
                 )
             );
-    }
-
-    private function getLastSnapshot(): array
-    {
-        return Json::decodeFile(new Path(self::snapshot));
     }
 
     /**
@@ -73,8 +65,8 @@ class Slack extends Controller
     {
         try {
             return $this->render('slack/statistics/emoji.html.twig', [
-                'emojis' => $this->getLastSnapshot(),
-                'date' => filemtime(new Path(self::snapshot)),
+                'emojis' => Emoji::snapshot(),
+                'date' => filemtime(new Path(Emoji::snapshot)),
             ]);
         } catch (RuntimeError $e) {
             http_response_code(500);
@@ -95,9 +87,9 @@ class Slack extends Controller
     public function emojisData(Request $request, $n = 5): string
     {
         if (is_numeric($n)) {
-            return $this->json(Emoji::sortedGetAll((int)$n));
+            return $this->json(Emoji::all((int)$n));
         }
-        if (in_array((string)$n, Emoji::getAllEmojisNames())) {
+        if (in_array((string)$n, Emoji::names())) {
             return $this->json([Emoji::find((string)$n)]);
         }
         return $this->json([], 400);
