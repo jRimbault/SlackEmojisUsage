@@ -44,9 +44,9 @@ class Emoji implements \JsonSerializable
      *
      * @param string $name
      *
-     * @return Emoji|null
+     * @return Emoji
      */
-    public static function find(string $name)
+    public static function find(string $name): Emoji
     {
         $result = self::fetch(
             Database::instance()->prepare(self::query('emoji')),
@@ -54,7 +54,8 @@ class Emoji implements \JsonSerializable
             self::week
         );
         if (!$result) {
-            return null;
+            // empty false Emoji
+            return new Emoji();
         }
         return self::toEmoji($result);
     }
