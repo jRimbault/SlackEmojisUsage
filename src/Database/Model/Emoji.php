@@ -16,6 +16,7 @@ class Emoji implements \JsonSerializable
 {
     const queries = 'queries.php';
     const snapshot = '/Slats/stats.json';
+    const week = 168;
     private $name = '';
     private $url = '';
     private $count = [];
@@ -51,7 +52,7 @@ class Emoji implements \JsonSerializable
         $result = self::fetch(
             Database::instance()->prepare(self::query('emoji')),
             $name,
-            168
+            self::week
         );
         if (!$result) {
             return null;
@@ -72,7 +73,7 @@ class Emoji implements \JsonSerializable
     private static function fetch(
         PDOStatement $statement,
         string $name,
-        int $limit = 168
+        int $limit = self::week
     ) {
         if ($statement->execute(['name' => $name, 'limit' => $limit])) {
             return $statement->fetchAll(PDO::FETCH_ASSOC)[0];
@@ -157,7 +158,7 @@ class Emoji implements \JsonSerializable
         $statement = $dbh->prepare(self::query('emoji'));
         foreach (self::names() as $name) {
             yield self::toEmoji(
-                self::fetch($statement, $name, 168)
+                self::fetch($statement, $name, self::week)
             );
         }
     }
@@ -169,14 +170,14 @@ class Emoji implements \JsonSerializable
      */
     public static function names(): array
     {
-        $dbh = Database::instance();
+        $names = Database::instance()
+            ->query(self::query('names'))
+            ->fetchAll(PDO::FETCH_ASSOC);
         return array_map(
             function ($value) {
                 return $value['name'];
             },
-            $dbh->simpleQuery(
-                self::query('names')
-            )
+            $names
         );
     }
 

@@ -7,9 +7,7 @@ use PDO;
 
 /**
  * Class Database
- *
- * Some shortcut methods to PDO
- * And singleton method
+ * Singleton to PDO
  *
  * @package Api\Database
  */
@@ -32,15 +30,5 @@ class Database extends PDO
     public static function instance(): self
     {
         return self::$instance ?? self::$instance = new self();
-    }
-
-    /**
-     * For queries without dynamic parameters
-     * @param string $query
-     * @return array
-     */
-    public function simpleQuery(string $query): array
-    {
-        return $this->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 }
