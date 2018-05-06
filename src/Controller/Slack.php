@@ -2,6 +2,7 @@
 
 namespace Api\Controller;
 
+use Api\Database\Database;
 use Api\Database\Model\Emoji;
 use Conserto\Controller;
 use Conserto\Error\RuntimeError;
@@ -66,7 +67,7 @@ class Slack extends Controller
         try {
             return $this->render('slack/statistics/emoji.html.twig', [
                 'emojis' => Emoji::snapshot(),
-                'date' => filemtime(new Path(Emoji::snapshot)),
+                'date' => filemtime(new Path(Database::dbFile)),
             ]);
         } catch (RuntimeError $e) {
             http_response_code(500);

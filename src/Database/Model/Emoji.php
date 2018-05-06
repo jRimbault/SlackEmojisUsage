@@ -14,7 +14,6 @@ use Api\Database\Database;
  */
 class Emoji implements \JsonSerializable
 {
-    const queries = 'queries.php';
     const snapshot = '/Slats/stats.json';
     const week = 168;
     private $name = '';
@@ -91,7 +90,7 @@ class Emoji implements \JsonSerializable
      */
     private static function query(string $name): string
     {
-        return (include self::queries)[$name];
+        return (include 'queries.php')[$name];
     }
 
     /**
