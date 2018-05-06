@@ -2,9 +2,11 @@
 
 namespace Api\Database\Model;
 
-use Api\Database\Database;
+use PDO;
+use PDOStatement;
 use Conserto\Json;
 use Conserto\Path;
+use Api\Database\Database;
 
 /**
  * Models the relations between the Emoji object
@@ -61,24 +63,21 @@ class Emoji implements \JsonSerializable
      * The particular semantics of the query makes it painful
      * to write in several place
      *
-     * @param \PDOStatement $statement
+     * @param PDOStatement $statement
      * @param string $name
      * @param int $limit
      *
      * @return array
      */
     private static function fetch(
-        \PDOStatement $statement,
+        PDOStatement $statement,
         string $name,
         int $limit = 168
     ) {
-        return Database::instance()->executeFetchAll(
-            $statement,
-            [
-                'name' => $name,
-                'limit' => $limit
-            ]
-        )[0];
+        if ($statement->execute(['name' => $name, 'limit' => $limit])) {
+            return $statement->fetchAll(PDO::FETCH_ASSOC)[0];
+        }
+        return [];
     }
 
     /**
@@ -170,11 +169,12 @@ class Emoji implements \JsonSerializable
      */
     public static function names(): array
     {
+        $dbh = Database::instance();
         return array_map(
             function ($value) {
                 return $value['name'];
             },
-            Database::instance()->simpleQuery(
+            $dbh->simpleQuery(
                 self::query('names')
             )
         );

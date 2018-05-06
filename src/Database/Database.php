@@ -3,36 +3,44 @@
 namespace Api\Database;
 
 use Conserto\Path;
+use PDO;
 
-
-class Database extends \PDO
+/**
+ * Class Database
+ *
+ * Some shortcut methods to PDO
+ * And singleton method
+ *
+ * @package Api\Database
+ */
+class Database extends PDO
 {
+    const driver = 'sqlite';
+    const dbFile = '/var/resources/api.db';
     private static $instance;
-    private static $dbfile = '/var/resources/api.db';
 
     public function __construct()
     {
-        parent::__construct('sqlite:' . new Path(self::$dbfile));
+        $path = new Path(self::dbFile);
+        parent::__construct(self::driver . ':' . $path->get());
     }
 
+    /**
+     * Get back a singleton of the class Database
+     * @return Database
+     */
     public static function instance(): self
     {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+        return self::$instance ?? self::$instance = new self();
     }
 
-    public function executeFetchAll($statement, $params = []): array
+    /**
+     * For queries without dynamic parameters
+     * @param string $query
+     * @return array
+     */
+    public function simpleQuery(string $query): array
     {
-        if ($statement && $statement->execute($params)) {
-            return $statement->fetchAll(\PDO::FETCH_ASSOC);
-        }
-        return [];
-    }
-
-    public function simpleQuery($query): array
-    {
-        return $this->executeFetchAll($this->prepare($query));
+        return $this->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 }

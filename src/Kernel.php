@@ -2,10 +2,7 @@
 
 namespace Api;
 
-use Conserto\Path;
-use Conserto\Controller;
 use Api\Controller\Slack;
-use Conserto\Utils\Config;
 use Conserto\Routing\Router;
 
 
