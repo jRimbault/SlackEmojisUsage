@@ -5,7 +5,8 @@ import argparse
 from .main import main
 
 
-if __name__ == '__main__':
+def args():
+    """ Defines the paramters of the program """
     parser = argparse.ArgumentParser(
         prog='Slats',
         description='''
@@ -25,4 +26,8 @@ Count occurences of each custom emoji in Slack
         '-o', '--output',
         help='Output file'
     )
-    main(parser.parse_args())
+    return parser.parse_args()
+
+
+if __name__ == '__main__':
+    main(args())
