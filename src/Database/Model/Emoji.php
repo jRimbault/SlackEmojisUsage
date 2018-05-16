@@ -203,11 +203,7 @@ class Emoji implements \JsonSerializable
 
     public function __toString(): string
     {
-        return json_encode(
-            $this->jsonSerialize(),
-            JSON_UNESCAPED_UNICODE |
-            JSON_UNESCAPED_SLASHES
-        );
+        return Json::encode($this->jsonSerialize());
     }
 
     public function jsonSerialize(): array
