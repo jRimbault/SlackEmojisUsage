@@ -58,7 +58,8 @@ img.emoji {
 
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
-<script src="/chartoptions.js"></script>
-<script src="/colors.js"></script>
-<script src="/stats.js"></script>
+<link rel="modulepreload" href="/chartoptions.js"></link>
+<link rel="modulepreload" href="/colors.js"></link>
+<link rel="modulepreload" href="/stats.js"></link>
+<script type="module" src="/stats.js"></script>
 {% endblock scripts %}

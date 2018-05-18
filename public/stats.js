@@ -1,5 +1,7 @@
 'use strict';
 
+import { chartOptions, } from '/chartoptions.js';
+import { colors, } from '/colors.js';
 
 const canvas = document.getElementById('chart-emojis');
 
