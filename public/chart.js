@@ -3,10 +3,13 @@
 import { chartOptions, } from '/chartoptions.js';
 import { colors, } from '/colors.js';
 
+let self;
+
 export class EmojisChart {
-    constructor(canvas) {
+    constructor(canvas, url) {
         self = this;
         self.canvas = canvas;
+        self.url = url;
     }
     drawFor(n = 5) {
         return self.fetchEmojisTop(n)
@@ -14,11 +17,7 @@ export class EmojisChart {
             .then(self.makeChart);
     }
     fetchEmojisTop(n = 5) {
-        return fetch(
-            `${window.location.origin}/slack/data/emoji/${n}`, {
-                method: 'POST',
-            }
-        )
+        return fetch(`${self.url}/${n}`, {method: 'POST',})
             .then(r => r.json())
             .catch(error => {
                 console.log(error);

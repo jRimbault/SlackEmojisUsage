@@ -22,5 +22,5 @@ const canvas = document.getElementById('chart-emojis');
     return cvs.height;
 })(canvas);
 
-const chart = new EmojisChart(canvas);
+const chart = new EmojisChart(canvas, `${window.location.origin}/slack/data/emoji`);
 chart.drawFor(5);
