@@ -19,9 +19,7 @@ export class EmojisChart {
     fetchEmojisTop(n = 5) {
         return fetch(`${self.url}/${n}`, {method: 'POST',})
             .then(r => r.json())
-            .catch(error => {
-                console.log(error);
-            });
+            .catch(console.log);
     }
     makeDataPoints(data) {
         const points = [];
@@ -33,25 +31,25 @@ export class EmojisChart {
         }
         return points;
     }
-    dataReduce(datasets, emoji, idx) {
-        datasets.push({
+    dataReduce(emoji, idx) {
+        return {
             label: emoji.name,
             data: self.makeDataPoints(emoji.data),
             fill: false,
             borderWidth: 1,
             backgroundColor: colors.backgroundColor[idx],
             borderColor: colors.borderColor[idx],
-        });
-        return datasets;
+        };
     }
     processEmojis(emojis) {
         return new Promise(resolve => resolve({
-            datasets: emojis.reduce(self.dataReduce, []),
+            datasets: emojis.map(self.dataReduce),
         }));
     }
     makeChart(data) {
         chartOptions.data = data;
         return new Promise(resolve => resolve(
-            new Chart(self.canvas.getContext('2d'), chartOptions)));
+            new Chart(self.canvas.getContext('2d'), chartOptions))
+        );
     }
 }
