@@ -15,7 +15,7 @@ use Api\Database\Database;
 class Emoji implements \JsonSerializable
 {
     const snapshot = '/Slats/stats.json';
-    const week = 168;
+    const week = 1680;
     private $name = '';
     private $url = '';
     private $count = [];
@@ -140,9 +140,14 @@ class Emoji implements \JsonSerializable
     {
         // go to hell usort
         usort($array, function (Emoji $a, Emoji $b) {
-            return array_sum($b->getCount()) <=> array_sum($a->getCount());
+            return $b->maxDelta() <=> $a->maxDelta();
         });
         return $array;
+    }
+
+    public function maxDelta(): int
+    {
+        return max($this->count) - min($this->count);
     }
 
     /**

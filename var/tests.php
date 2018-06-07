@@ -6,6 +6,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Api\Controller\Slack;
 use Conserto\Http\Request;
+use Api\Database\Model\Emoji;
 
-
-echo (new Slack())->emojisData(new Request(), 1);
+foreach (Emoji::all() as $emoji) {
+    echo $emoji->getName() . ': ' . $emoji->delta() . PHP_EOL;
+}
