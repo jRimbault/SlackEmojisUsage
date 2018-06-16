@@ -46,13 +46,13 @@ const makeChart = canvas => data => {
 
 export class EmojisChart {
   constructor (canvas, base) {
-    this.canvas = canvas
+    this.draw = makeChart(canvas)
     this.url = url(base)
   }
   drawFor (n = 5) {
     return postFetch(this.url(n))
       .then(json)
       .then(processEmojis)
-      .then(makeChart(this.canvas))
+      .then(this.draw)
   }
 }
