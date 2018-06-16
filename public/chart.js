@@ -3,54 +3,56 @@
 import { chartOptions } from '/chartoptions.js'
 import { colors } from '/colors.js'
 
-const fetch = window.fetch
-let self
+/** Helper functions */
+const url = base => n => `${base}/${n}`
+const json = r => r.json()
+const fetch = options => url => window.fetch(url, options)
+const postFetch = fetch({method: 'POST'})
+const chart = (canvas, options) => new window.Chart(canvas, options)
+const push = array => any => array.push(any)
+
+/** Data functions */
+const makeDataPoints = data => {
+  const points = []
+  const ppush = push(points)
+  for (let i = 0; i < data[0].length; i += 1) {
+    ppush({
+      y: data[0][i],
+      x: data[1][i]
+    })
+  }
+  return points
+}
+const dataReduce = (emoji, idx) => {
+  return {
+    label: emoji.name,
+    data: makeDataPoints(emoji.data),
+    fill: false,
+    borderWidth: 1,
+    backgroundColor: colors.backgroundColor[idx],
+    borderColor: colors.borderColor[idx]
+  }
+}
+const processEmojis = emojis => {
+  return {
+    datasets: emojis.map(dataReduce)
+  }
+}
+
+const makeChart = canvas => data => {
+  chartOptions.data = data
+  chart(canvas.getContext('2d'), chartOptions)
+}
 
 export class EmojisChart {
-  constructor (canvas, url) {
-    self = this
-    self.canvas = canvas
-    self.url = url
+  constructor (canvas, base) {
+    this.canvas = canvas
+    this.url = url(base)
   }
   drawFor (n = 5) {
-    return self.fetchEmojisTop(n)
-      .then(self.processEmojis)
-      .then(self.makeChart)
-  }
-  fetchEmojisTop (n = 5) {
-    return fetch(`${self.url}/${n}`, {method: 'POST'})
-      .then(r => r.json())
-      .catch(console.log)
-  }
-  makeDataPoints (data) {
-    const points = []
-    for (let i = 0; i < data[0].length; i += 1) {
-      points.push({
-        y: data[0][i],
-        x: data[1][i]
-      })
-    }
-    return points
-  }
-  dataReduce (emoji, idx) {
-    return {
-      label: emoji.name,
-      data: self.makeDataPoints(emoji.data),
-      fill: false,
-      borderWidth: 1,
-      backgroundColor: colors.backgroundColor[idx],
-      borderColor: colors.borderColor[idx]
-    }
-  }
-  processEmojis (emojis) {
-    return new Promise(resolve => resolve({
-      datasets: emojis.map(self.dataReduce)
-    }))
-  }
-  makeChart (data) {
-    chartOptions.data = data
-    return new Promise(resolve => resolve(
-      new window.Chart(self.canvas.getContext('2d'), chartOptions))
-    )
+    return postFetch(this.url(n))
+      .then(json)
+      .then(processEmojis)
+      .then(makeChart(this.canvas))
   }
 }

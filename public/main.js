@@ -20,10 +20,10 @@ function responsiveCanvas () {
 }
 
 function resize (limit, size) {
-  if (window.innerWidth > limit) return
+  if (window.innerWidth > limit) return canvas.height
   canvas.height = size
 
-  return size
+  return canvas.height
 }
 
 function getDetails (node) {
