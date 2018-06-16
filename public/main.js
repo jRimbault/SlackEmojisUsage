@@ -26,10 +26,16 @@ function resize (limit, size) {
   return canvas.height
 }
 
-function getDetails (node) {
-  const name = node.childNodes[3].innerText.slice(1, -1)
-  node.addEventListener('click', () => chart.drawFor(name))
-}
+/**
+ * I'm just having fun at this point
+ */
+
+const clickListener = f => n => n.addEventListener('click', () => f(n))
+const name = n => n.childNodes[3].innerText.slice(1, -1)
+const draw = f => n => chart.drawFor(f(n))
+
+const drawDetails = clickListener(draw(name))
+const getDetails = node => drawDetails(node)
 
 responsiveCanvas()
 chart.drawFor(5)
