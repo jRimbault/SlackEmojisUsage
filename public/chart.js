@@ -50,7 +50,7 @@ export class EmojisChart {
   makeChart (data) {
     chartOptions.data = data
     return new Promise(resolve => resolve(
-      new Chart(self.canvas.getContext('2d'), chartOptions))
+      new window.Chart(self.canvas.getContext('2d'), chartOptions))
     )
   }
 }

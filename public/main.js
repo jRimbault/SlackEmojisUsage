@@ -12,16 +12,18 @@ const chart = new EmojisChart(canvas, `${window.location.origin}/slack/data/emoj
  * to resize their browser on their phone.
  */
 function responsiveCanvas () {
-  if (window.innerWidth < 600) {
-    return canvas.height = 80
-  }
-  if (window.innerWidth < 768) {
-    return canvas.height = 70
-  }
-  if (window.innerWidth < 991) {
-    return canvas.height = 50
-  }
+  resize(990, 50)
+  resize(768, 70)
+  resize(600, 80)
+
   return canvas.height
+}
+
+function resize (limit, size) {
+  if (window.innerWidth > limit) return
+  canvas.height = size
+
+  return size
 }
 
 function getDetails (node) {
