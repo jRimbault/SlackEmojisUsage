@@ -1,0 +1,39 @@
+
+from django.http import HttpResponse
+from django.shortcuts import render
+from api import model
+import json
+
+
+def index(request):
+    return render(
+        request,
+        'index.html',
+        context={
+            'emojis': model.Emoji.snapshot()
+        },
+        content_type='text/html'
+    )
+
+
+def graph(request, n=5):
+    return HttpResponse(
+        json.dumps(model.Emoji.graph(n)),
+        content_type='application/json'
+    )
+
+
+def javascript(*args, **kwargs):
+    return render(*args, **kwargs, content_type='application/javascript')
+
+def chartoptions_js(r):
+    return javascript(r, 'js/chartoptions.js')
+
+def colors_js(r):
+    return javascript(r, 'js/colors.js')
+
+def chart_js(r):
+    return javascript(r, 'js/chart.js')
+
+def main_js(r):
+    return javascript(r, 'js/main.js')

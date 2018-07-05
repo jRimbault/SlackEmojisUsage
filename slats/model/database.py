@@ -10,7 +10,7 @@ class Database:
     """
     Interaction with the sqlite3 database
     """
-    def __init__(self, path='/../../var/resources/api.db'):
+    def __init__(self, path='/../../var/resources/db.sqlite3'):
         dbfile = constants.PACKAGE_DIR + path
         self.conn = sqlite3.connect(dbfile)
         self.curr = self.conn.cursor()

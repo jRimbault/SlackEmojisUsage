@@ -12,11 +12,12 @@ CREATE TABLE IF NOT EXISTS emoji (
 
 INIT_TABLE_COUNT = """
 CREATE TABLE IF NOT EXISTS count (
-    id    integer not null,
-    count integer not null,
-    date  datetime default current_timestamp,
-    foreign key (id) references emoji(id)
-)
+    id           integer primary key autoincrement,
+    fk_emoji_id  integer not null,
+    count        integer not null,
+    date         datetime default current_timestamp,
+    foreign key (fk_emoji_id) references emoji(id)
+);
 """
 
 INSERT_NEW_EMOJI = """
@@ -24,7 +25,7 @@ INSERT OR IGNORE INTO emoji (name, url) VALUES (?, ?)
 """
 
 INSERT_NEW_COUNT = """
-INSERT OR IGNORE INTO count (id, count) VALUES
+INSERT OR IGNORE INTO count (fk_emoji_id, count) VALUES
     ((SELECT id FROM emoji WHERE name = ?), ?)
 """
 
@@ -36,7 +37,7 @@ SELECT
 FROM
     emoji AS e,
     count AS c
-WHERE e.id = c.id
+WHERE e.id = c.fk_emoji_id
 GROUP BY e.name
 """
 
@@ -49,7 +50,7 @@ SELECT
 FROM emoji AS e, (
     SELECT count, date
     FROM count
-    WHERE id = (
+    WHERE fk_emoji_id = (
         SELECT id
         FROM emoji
         WHERE name = :name

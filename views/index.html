@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Emojis Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <style>
+        div.container {
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        div.card {
+            margin: 1rem 0;
+        }
+
+        img.emoji {
+            height: 1.5em;
+            min-width: 1.5em;
+        }
+
+        .badge {
+            min-width: 4em;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="chart-emojis" width="100" height="40"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <ul class="list-group" style="margin-top: 1rem;">
+                    {% for emoji in emojis %}
+                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <img src="{{ emoji.url }}" class="emoji" alt="">
+                        <code>:{{ emoji.name }}:</code>
+                        <span class="badge badge-secondary badge-pill">{{ emoji.count }}</span>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<link rel="modulepreload" href="{% url 'chartoptions_js' %}"/>
+<link rel="modulepreload" href="{% url 'colors_js' %}"/>
+<link rel="modulepreload" href="{% url 'chart_js' %}"/>
+<link rel="modulepreload" href="{% url 'main_js' %}"/>
+<script type="module" src="{% url 'main_js' %}"></script>
+
+</html>

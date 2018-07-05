@@ -1,5 +1,5 @@
 /.vscode/
-/.idea/
+.idea/
 /html/
 /vendor/
 /var/logs/
@@ -9,3 +9,5 @@
 /var/resources/
 !/var/resources/.gitkeep
 /config/*.json
+__pycache__/
+
