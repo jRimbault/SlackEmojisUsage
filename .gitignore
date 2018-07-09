@@ -10,4 +10,4 @@
 !/var/resources/.gitkeep
 /config/*.json
 __pycache__/
-
+*.sqlite3

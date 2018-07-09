@@ -30,6 +30,7 @@ url_js = [
 
 url_data = [
     path('slack/data/emoji/<n>', views.graph),
+    path('slack/command', views.text),
 ]
 
 url_html = [

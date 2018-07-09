@@ -2,7 +2,7 @@
 
 
 Requirements:
-- Python 3.5
+- Python 3.6
 - pip/pipenv
 
 
@@ -11,27 +11,11 @@ Usage:
 ```shell
 pipenv shell
 pipenv install
-python -m slats -h
+# for slats
+python -m slack_emojis -h
+# for django
+python manage.py runserver
 ```
-
-### Json snapshot
-
-```json
-[
-    [
-        <number of occurences>,
-        "emoji name",
-        "emoji url"
-    ],
-    [...],
-    [...]
-    ...
-]
-```
-Array of arrays containing each 3 values:
-- the custom emoji's number of occurences
-- its name
-- its URL
 
 ### Sqlite3 database
 
@@ -41,15 +25,15 @@ CREATE TABLE IF NOT EXISTS emoji (
     name  varchar (64) unique not null,
     url   varchar (512) not null
 );
+
 CREATE TABLE IF NOT EXISTS count (
-    id    integer not null,
-    count integer not null,
-    date  datetime default current_timestamp,
-    foreign key (id) references emoji(id)
+    id           integer primary key autoincrement,
+    fk_emoji_id  integer not null,
+    count        integer not null,
+    date         datetime default current_timestamp,
+    foreign key (fk_emoji_id) references emoji(id)
 );
 ```
-
-![diagram](diagram.png "Database diagram")
 
 ### Todo
 

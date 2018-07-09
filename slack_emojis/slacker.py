@@ -6,11 +6,21 @@ Extend Slacker to expose my own methods
 """
 
 import json
-from slacker import Slacker
-from .utils import grep
+import subprocess
+from pathlib import Path
+from slacker import Slacker as SlackerOrigin
 
 
-class Slatser(Slacker):
+def grep(needle, path):
+    return len(subprocess.run(
+        ['grep', '-ro', needle, str(Path(path).resolve())],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    ).stdout.splitlines())
+
+
+class Slacker(SlackerOrigin):
     """Slatser class
     Extend Slacker to expose my own methods
     """

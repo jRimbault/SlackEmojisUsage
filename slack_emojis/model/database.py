@@ -2,17 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
-from . import queries
-from .. import constants
-
+from slack_emojis.model import queries
+from api import settings
 
 class Database:
     """
     Interaction with the sqlite3 database
     """
-    def __init__(self, path='/../../var/resources/db.sqlite3'):
-        dbfile = constants.PACKAGE_DIR + path
-        self.conn = sqlite3.connect(dbfile)
+    def __init__(self):
+        self.conn = sqlite3.connect(settings.DATABASES['default']['NAME'])
         self.curr = self.conn.cursor()
         self.__init_emoji_table()
         self.__init_count_table()

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .database import Database
-from . import queries
+from slack_emojis.model import Database
+from slack_emojis.model import queries
 
 
 DBH = Database()

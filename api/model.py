@@ -16,15 +16,28 @@ class Emoji(models.Model):
     class Meta:
         db_table = 'emoji'
 
-    def last_count(self):
-        c = Count.objects.filter(fk_emoji=self.id).order_by('-date')[:1]
-        return c[0].count
+    def to_graph_element(self):
+        return {
+            'name': self.name,
+            'url': self.url,
+            'data': self.plot_points()
+        }
+
+    def plot_points(self):
+        points = [[], []]
+        for count in Count.last(self.id, 1680):
+            points[0].append(count.count)
+            points[1].append(str(count.date))
+        return points
+
+    def count(self):
+        return Count.last(self.id, 1)[0].count
 
     def to_dict(self):
         return {
             'name': self.name,
             'url': self.url,
-            'count': self.last_count(),
+            'count': self.count(),
         }
 
     def __str__(self):
@@ -47,23 +60,14 @@ class Emoji(models.Model):
     @staticmethod
     def _multiple(n):
         return sorted(
-            [Emoji._single(e.name) for e in Emoji.objects.all()],
+            [e.to_graph_element() for e in Emoji.objects.all()],
             key=lambda i: sum(i['data'][0]),
             reverse=True
         )[0:n]
 
     @staticmethod
     def _single(name):
-        emoji = Emoji.objects.filter(name=name)[0]
-        data = [[], []]
-        for count in Count.last(emoji.id, 1680):
-            data[0].append(count.count)
-            data[1].append(str(count.date))
-        return {
-            'name': emoji.name,
-            'url': emoji.url,
-            'data': data
-        }
+        return Emoji.objects.filter(name=name)[0].to_graph_element()
 
 
 class Count(models.Model):

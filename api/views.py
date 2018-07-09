@@ -23,6 +23,13 @@ def graph(request, n=5):
     )
 
 
+def text(request):
+    text = []
+    for emoji in model.Emoji.snapshot()[:10]:
+        text.append(":%s: : %s" % (emoji['name'], emoji['count']))
+    return HttpResponse('\n'.join(text), content_type='text/plain')
+
+
 def javascript(*args, **kwargs):
     return render(*args, **kwargs, content_type='application/javascript')
 

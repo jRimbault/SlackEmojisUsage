@@ -6,4 +6,4 @@ import tempfile
 
 
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
-TMPDIR = tempfile.mkdtemp()
+TMP_DIR = tempfile.mkdtemp()

@@ -40,5 +40,7 @@ export const colors = {
         '#5c940d',
         '#e67700',
         '#d9480f'
-    ]
+    ],
+    background: i => colors.backgroundColor[i % colors.backgroundColor.length],
+    border: i => colors.borderColor[i % colors.borderColor.length],
 };
