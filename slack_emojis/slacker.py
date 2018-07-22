@@ -7,17 +7,9 @@ Extend Slacker to expose my own methods
 
 import json
 import subprocess
+from collections import Counter
 from pathlib import Path
 from slacker import Slacker as SlackerOrigin
-
-
-def grep(needle, path):
-    return len(subprocess.run(
-        ['grep', '-ro', needle, str(Path(path).resolve())],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        universal_newlines=True,
-    ).stdout.splitlines())
 
 
 class Slacker(SlackerOrigin):
@@ -27,20 +19,26 @@ class Slacker(SlackerOrigin):
 
     def emojis_list(self):
         """ Parse Slack's API response to get only the list of Emojis """
-        emojis = self.emoji.list().body['emoji']
-        for emoji in emojis:
+        for emoji in self.emoji.list().body['emoji']:
             yield emoji
 
 
     def channels_list(self):
         """ Get all the public channels from Slack """
-        channels = self.channels.list(exclude_archived=True).body['channels']
-        for channel in channels:
+        for channel in self.channels.list(exclude_archived=True).body['channels']:
             yield channel['id']
 
+    def total(self):
+        messages = []
+        for c in self.channels_list():
+            messages.extend(self.messages(c))
+        return self.counter(messages)
 
-    def channel_full_history(self, channel, pagesize=100):
-        """ Download all available messages from a channel """
+    def counter(self, messages):
+        count = Counter(messages)
+        return {e: count[':' + e + ':'] for e in self.emojis_list()}
+
+    def messages(self, channel):
         messages = []
         last_timestamp = None
 
@@ -49,38 +47,17 @@ class Slacker(SlackerOrigin):
                 channel=channel,
                 latest=last_timestamp,
                 oldest=0,
-                count=pagesize
+                count=100
             ).body
 
-            messages.extend(response['messages'])
+            messages.extend([m['text'] for m in response['messages']])
 
             if not response['has_more']:
                 break
 
-            last_timestamp = messages[-1]['ts'] # -1 last element of list
+            last_timestamp = response['messages'][-1]['ts']
 
         return messages
-
-
-    def download_history(self, path):
-        """
-        Dump all channels's messages into distinct files
-        yield their names and messages count
-        """
-        for channel_id in self.channels_list():
-            messages = self.channel_full_history(channel_id)
-            print(
-                json.dumps(messages),
-                file=open(path + '/' + channel_id + '.json', mode='w')
-            )
-
-
-    def count_all_emojis(self, path):
-        """ Count all occurences of all custom emojis """
-        total = {}
-        for emoji in self.emojis_list():
-            total[emoji] = grep(':'+emoji+':', path)
-        return total
 
 
 def spinner():

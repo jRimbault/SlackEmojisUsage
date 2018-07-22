@@ -73,7 +73,7 @@ class Emoji(models.Model):
 class Count(models.Model):
     fk_emoji = models.ForeignKey(Emoji, on_delete=models.CASCADE)
     count = models.IntegerField()
-    date = models.DateField()
+    date = models.DateTimeField()
 
     class Meta:
         db_table = 'count'

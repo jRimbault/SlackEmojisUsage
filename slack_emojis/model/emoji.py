@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from slack_emojis.model import Database
+from slack_emojis.model.database import Database
 from slack_emojis.model import queries
 
 

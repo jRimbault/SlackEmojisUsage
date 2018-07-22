@@ -5,14 +5,12 @@
 Main module
 """
 
-from slack_emojis.model import Emoji
-
+from datetime import datetime
 
 class Stats(object):
-    def __init__(self, slack, tmp_dir):
+    def __init__(self, slack):
         """ Make statistics """
-        slack.download_history(tmp_dir)
-        self.emojis = slack.count_all_emojis(tmp_dir)
+        self.emojis = slack.total()
         self.urls = slack.emoji.list().body['emoji']
 
     def save(self):
@@ -22,5 +20,20 @@ class Stats(object):
             url = self.urls[name]
             if 'alias' in url:
                 url = ''
-            Emoji.new(name, url)
-            Emoji.count(name).new(count)
+            save_count(save_emoji(name, url), count)
+
+
+def save_emoji(name, url):
+    from api.model import Emoji
+    e, created = Emoji.objects.get_or_create(name=name, url=url)
+    e = Emoji.objects.get(name=name, url=url)
+    return e.id
+
+
+def save_count(e_id, count):
+    from api.model import Count
+    Count.objects.create(
+        count=count,
+        date=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        fk_emoji_id=e_id
+    )

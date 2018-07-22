@@ -22,12 +22,10 @@ Count occurences of each custom emoji in Slack
 
 def main(args):
     """ Main """
-    Stats(Slacker(args.token), settings.TMP_DIR).save()
+    Stats(Slacker(args.token)).save()
 
 
 try:
     main(args())
 except KeyboardInterrupt:
     sys.exit('\nERROR: Interrupted by user')
-finally:
-    shutil.rmtree(settings.TMP_DIR)
