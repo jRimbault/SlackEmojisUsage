@@ -4,7 +4,7 @@ import sys
 import argparse
 from slack_emojis import settings
 from slack_emojis import Stats
-from slack_emojis import Slacker
+from slack_emojis import EmojiCounter
 
 
 def args():
@@ -22,7 +22,7 @@ Count occurences of each custom emoji in Slack
 
 def main(args):
     """ Main """
-    Stats(Slacker(args.token)).save()
+    Stats(EmojiCounter(args.token)).save()
 
 
 try:

@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 
 
@@ -73,7 +74,7 @@ class Emoji(models.Model):
 class Count(models.Model):
     fk_emoji = models.ForeignKey(Emoji, on_delete=models.CASCADE)
     count = models.IntegerField()
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat())
 
     class Meta:
         db_table = 'count'
