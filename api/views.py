@@ -1,8 +1,8 @@
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
-from api import model
+from api import data
 from api.sentences import SENTENCES
-import json
 import random
 
 
@@ -11,29 +11,21 @@ def index(request):
         request,
         'index.html',
         context={
-            'emojis': model.Emoji.snapshot()
+            'emojis': data.Emoji.snapshot()
         },
         content_type='text/html'
     )
 
 
 def graph(request, n=5):
-    return HttpResponse(
-        json.dumps(model.Emoji.graph(n)),
-        content_type='application/json'
-    )
+    return JsonResponse(data.Emoji.graph(n), safe=False)
 
 
 def text(request):
-    text = []
-    for emoji in model.Emoji.snapshot()[:10]:
+    text = [random.choice(SENTENCES)]
+    for emoji in data.Emoji.snapshot()[:10]:
         text.append(":%s: : %s" % (emoji['name'], emoji['count']))
-    return HttpResponse(
-        random.choice(SENTENCES)
-        + '\n'
-        + '\n'.join(text),
-        content_type='text/plain'
-    )
+    return HttpResponse('\n'.join(text), content_type='text/plain')
 
 
 def javascript(*args, **kwargs):
